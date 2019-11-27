@@ -36,6 +36,7 @@ public class MessageController {
         message.setAccount(a);
         message.setMessage(tweeter);
         messageRepo.save(message);
-        return "redirect:/";
+        String nick = a.getNickname();
+        return "redirect:/users/" + nick;
     }
 }
