@@ -5,10 +5,22 @@
  */
 package tweeter.controllers;
 
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 /**
  *
  * @author sebserge
  */
+@Controller
 public class AccountController {
     
+    @GetMapping("/users/{nick}")
+    @ResponseBody
+    public String getUserProfile(Model model, @PathVariable String nick) {
+        return nick;
+    }
 }
