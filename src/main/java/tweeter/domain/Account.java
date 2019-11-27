@@ -30,7 +30,7 @@ public class Account extends AbstractPersistable<Long> {
     @Basic(fetch = FetchType.LAZY)
     private byte[] profilepic;
     
-    @ElementCollection(fetch = FetchType.EAGER)
-    private List<String> authorities;
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    private List<String> authorities;
 
 }
