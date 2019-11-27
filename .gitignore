@@ -6,4 +6,4 @@ target/
 
 .tmcproject.yml
 database.mv.db
-
+database.trace.db

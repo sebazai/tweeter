@@ -5,6 +5,7 @@
  */
 package tweeter.controllers;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,11 @@ public class AccountController {
     
     @GetMapping("/users/{nick}")
     @ResponseBody
-    public String getUserProfile(Model model, @PathVariable String nick) {
-        return nick;
+    public String getUserProfile(Authentication auth, Model model, @PathVariable String nick) {
+        if (auth.getName().equals(nick)) {
+            return "jee";
+        } else {
+            return "nooo";
+        }
     }
 }

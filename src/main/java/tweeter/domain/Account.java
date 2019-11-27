@@ -5,12 +5,14 @@
  */
 package tweeter.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
-import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +31,21 @@ public class Account extends AbstractPersistable<Long> {
     @Lob
     @Basic(fetch = FetchType.LAZY)
     private byte[] profilepic;
+    
+    @OneToMany(mappedBy = "account")
+    List<Followers> followers = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "account")
+    List<Messages> messages = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "account")
+    List<Photos> photos = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "account")
+    List<Likes> likes = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "account")
+    List<Comments> comments = new ArrayList<>();
     
 //    @ElementCollection(fetch = FetchType.EAGER)
 //    private List<String> authorities;
