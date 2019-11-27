@@ -30,7 +30,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/first").permitAll()
                 .anyRequest().authenticated()
             .and()
-                .formLogin().defaultSuccessUrl("/successfulogin")
+                .formLogin().defaultSuccessUrl("/successfullogin")
                 .permitAll()
             .and()
                 .logout()

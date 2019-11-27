@@ -27,11 +27,14 @@ public class DefaultController {
     }
     
     @GetMapping("/first")
-    public String toRegisterOrLoginChoosing() {
+    public String toRegisterOrLoginChoosing(Authentication auth) {
+        if (auth != null && auth.isAuthenticated()) {
+            return "redirect:/successfullogin";
+        }
         return "registerorlogin";
     }
     
-    @GetMapping("/successfulogin")
+    @GetMapping("/successfullogin")
     public String redirectSuccessfulLoginToOwnProfile(Authentication auth) {
         Account a = accountRepo.findByUsername(auth.getName());
         return "redirect:/users/" + a.getNickname();
