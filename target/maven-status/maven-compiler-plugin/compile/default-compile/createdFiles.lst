@@ -1,8 +1,0 @@
-tweeter/controllers/AccountController.class
-tweeter/controllers/DefaultController.class
-tweeter/MyApplication.class
-tweeter/DevelopmentSecurityConfiguration.class
-tweeter/CustomUserDetailsService.class
-tweeter/SecurityConfiguration.class
-tweeter/repositories/AccountRepository.class
-tweeter/domain/Account.class
