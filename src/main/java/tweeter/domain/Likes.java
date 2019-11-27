@@ -22,9 +22,9 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @AllArgsConstructor
 public class Likes  extends AbstractPersistable<Long> {
     @ManyToOne
-    private Messages message;
+    private Messages messages;
     @ManyToOne
-    private Photos photo;
+    private Photos photos;
     @ManyToOne
     private Account account;
 }

@@ -23,9 +23,9 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 public class Comments extends AbstractPersistable<Long> {
     private String comment;
     @ManyToOne
-    private Messages message;
+    private Messages messages;
     @ManyToOne
-    private Photos photo;
+    private Photos photos;
     @ManyToOne
     private Account account;
 }

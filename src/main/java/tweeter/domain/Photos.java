@@ -5,8 +5,11 @@
  */
 package tweeter.domain;
 
+import java.util.ArrayList;
+import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -26,9 +29,9 @@ public class Photos extends AbstractPersistable<Long> {
     @ManyToOne
     private Account account;
     
-    @ManyToOne
-    private Likes likes;
+    @OneToMany(mappedBy = "photos")
+    private List<Likes> likes = new ArrayList<>();
     
-    @ManyToOne
-    private Comments comments;
+    @OneToMany(mappedBy = "photos")
+    private List<Comments> comments = new ArrayList<>();
 }

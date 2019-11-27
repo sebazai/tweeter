@@ -25,15 +25,15 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Messages  extends AbstractPersistable<Long> {
-    private LocalDateTime messageTime;
+    private LocalDateTime messageTime = LocalDateTime.now();
     private String message;
     
     @ManyToOne
     private Account account;
     
-    @OneToMany(mappedBy = "message")
+    @OneToMany(mappedBy = "messages")
     private List<Likes> likes = new ArrayList<>();
     
-    @OneToMany(mappedBy = "message")
+    @OneToMany(mappedBy = "messages")
     private List<Comments> comments = new ArrayList<>();
 }

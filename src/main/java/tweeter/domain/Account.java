@@ -11,6 +11,7 @@ import javax.persistence.Basic;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,7 @@ public class Account extends AbstractPersistable<Long> {
     @Basic(fetch = FetchType.LAZY)
     private byte[] profilepic;
     
-    @OneToMany(mappedBy = "account")
+    @ManyToMany(mappedBy = "account")
     List<Followers> followers = new ArrayList<>();
     
     @OneToMany(mappedBy = "account")
