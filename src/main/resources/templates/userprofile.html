@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Hello world</title>
+    </head>
+    <body>
+        <h1 th:text="${'Hello ' + account.nickname}">Hello world</h1>
+        <div th:if="${owner}">
+            <h2>
+                What's on your mind?
+            </h2>
+            <form method="POST" th:action="@{/shout}">
+                <input type="text" name="tweeter" id="tweeter" />
+                <input type="submit" value="Shout!" />
+            </form>
+        </div>
+        
+
+    </body>
+</html>
+
