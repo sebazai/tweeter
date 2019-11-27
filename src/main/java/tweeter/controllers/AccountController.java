@@ -29,7 +29,7 @@ public class AccountController {
     public String getUserProfile(Authentication auth, Model model, @PathVariable String nick) {
         Account a = accountRepo.findByNickname(nick);
         if (a == null) {
-            return "index";
+            return "redirect:/404notfound";
         }
         if (auth.getName().equals(a.getUsername())) {
             model.addAttribute("owner", true);

@@ -8,6 +8,7 @@ package tweeter.domain;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Lob;
@@ -25,8 +26,12 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @AllArgsConstructor
 public class Account extends AbstractPersistable<Long> {
     
+    @Column(unique=true)
     private String username;
+    
     private String password;
+    
+    @Column(unique=true)
     private String nickname;
     
     @Lob
