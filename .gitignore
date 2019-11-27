@@ -1,10 +1,9 @@
 *.class
 *.jar
 *.war
-.gradle
-/build/
-./gradle
+
 target/
+
 .tmcproject.yml
 database.mv.db
 
