@@ -1,3 +1,8 @@
+*.class
+*.jar
+*.war
+.gradle
+/build/
 ./gradle
 target/
 .tmcproject.yml
