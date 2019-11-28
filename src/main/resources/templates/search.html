@@ -14,7 +14,7 @@
         <span th:if="${users.size() == 0}">Nothing found</span>
         <div th:unless="${users.size() == 0}">
             <div th:each="user : ${users}">
-                <span th:text="${user.nickname}"></span>
+                <a th:href="@{/users/{nick}(nick = ${user.nickname})}" th:text="${user.nickname}"></a>
                 <form method="POST" th:action="@{/follow}">
                     <input type="hidden" th:value="${user.getId()}" name="idtofollow" id="idtofollow" />
                     <input type="submit" value="follow" /></form>

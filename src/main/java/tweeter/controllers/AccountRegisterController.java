@@ -42,6 +42,7 @@ public class AccountRegisterController {
             @RequestParam String passwordConfirm, 
             @RequestParam String nickname) {
         Account a = new Account();
+        //implement account validation and password confirmation validationKaKai s
 
         a.setUsername(username);
         a.setPassword(passwordEncoder.encode(password));
