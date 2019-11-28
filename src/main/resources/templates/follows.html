@@ -1,0 +1,18 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title th:text="${'Users ' + account.nickname + ' followers'}"></title>
+    </head>
+    <body>
+
+        <h1>Hi</h1>
+
+        <div th:each="f : ${follow}">
+            Started following: <span th:text="${#temporals.format(f.startedFollowing, 'dd-MM-yyyy HH:mm')}"></span><br />
+            Follower: <span th:text="${f.thefollower.nickname}"></span>
+            <form><input type="submit" value="Block user" /></form>
+        </div>
+    </body>
+</html>
+

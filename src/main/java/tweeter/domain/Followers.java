@@ -26,8 +26,10 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Followers extends AbstractPersistable<Long>{
-    private LocalDateTime startedFollowing;
+    private LocalDateTime startedFollowing = LocalDateTime.now();
     @ManyToOne
     private Account account;
-    private Long followingId;
+    @ManyToOne
+    private Account thefollower;
+    private boolean blocked;
 }

@@ -5,6 +5,7 @@
  */
 package tweeter.repositories;
 
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import tweeter.domain.Followers;
 
@@ -13,5 +14,5 @@ import tweeter.domain.Followers;
  * @author sebserge
  */
 public interface FollowersRepository extends JpaRepository<Followers, Long>{
-    
+
 }

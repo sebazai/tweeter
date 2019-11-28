@@ -38,7 +38,8 @@ public class Account extends AbstractPersistable<Long> {
     @Basic(fetch = FetchType.LAZY)
     private byte[] profilepic;
     
-    @ManyToMany(mappedBy = "account")
+   
+    @OneToMany(mappedBy = "account")
     List<Followers> followers = new ArrayList<>();
     
     @OneToMany(mappedBy = "account")

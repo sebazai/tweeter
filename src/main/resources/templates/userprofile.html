@@ -5,7 +5,14 @@
         <title>Hello world</title>
     </head>
     <body>
-        
+        <ul>
+            <li>
+                <a th:href="@{/users/{nick}/followers(nick=${account.nickname})}">Followers</a>
+            </li>
+            <li>
+                <a th:href="@{/users/{nick}/following(nick=${account.nickname})}">Following</a>
+            </li>
+        </ul>
         <div th:if="${owner}">
             <h1 th:text="${'Hello ' + account.nickname}">Hello world</h1>
             <h2>
@@ -17,14 +24,14 @@
             </form>
         </div>
         <div th:if="${owner}">
-            <div th:each="message: ${allmessages}">
-                <div th:text="${message.message}"></div><br />
+            <div th:each="message: ${messages}">
+                <div th:text="${message.message}"></div>
                 <div th:text="${#temporals.format(message.messageTime, 'dd-MM-yyyy HH:mm')}"></div><br />
             </div>
         </div>
         <div th:unless="${owner}">
-            <div th:each="message: ${account.messages}">
-                <div th:text="${message.message}"></div><br />
+            <div th:each="message: ${messages}">
+                <div th:text="${message.message}"></div>
                 <div th:text="${#temporals.format(message.messageTime, 'dd-MM-yyyy HH:mm')}"></div><br />
             </div>
         </div>
