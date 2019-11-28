@@ -27,6 +27,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @AllArgsConstructor
 public class Followers extends AbstractPersistable<Long>{
     private LocalDateTime startedFollowing;
-    @ManyToMany
-    private List<Account> account = new ArrayList<>();
+    @ManyToOne
+    private Account account;
+    private Long followingId;
 }

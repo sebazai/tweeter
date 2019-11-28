@@ -42,7 +42,7 @@ public class AccountRegisterController {
             @RequestParam String passwordConfirm, 
             @RequestParam String nickname) {
         Account a = new Account();
-        System.out.println(username);
+
         a.setUsername(username);
         a.setPassword(passwordEncoder.encode(password));
         a.setNickname(nickname);

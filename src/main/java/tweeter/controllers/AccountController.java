@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 import tweeter.domain.Account;
 import tweeter.repositories.AccountRepository;
+import tweeter.repositories.MessagesRepository;
 
 /**
  *
@@ -23,7 +24,10 @@ import tweeter.repositories.AccountRepository;
 public class AccountController {
     
     @Autowired
-    AccountRepository accountRepo;
+    private AccountRepository accountRepo;
+    
+    @Autowired
+    private MessagesRepository messageRepo;
     
     @GetMapping("/users/{nick}")
     public String getUserProfile(Authentication auth, Model model, @PathVariable String nick) {
@@ -31,9 +35,11 @@ public class AccountController {
         if (a == null) {
             return "redirect:/404notfound";
         }
+        
         if (auth.getName().equals(a.getUsername())) {
             model.addAttribute("owner", true);
         }
+        
         model.addAttribute("account", a);
         return "userprofile";
     }
