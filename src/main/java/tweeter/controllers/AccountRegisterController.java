@@ -5,7 +5,6 @@
  */
 package tweeter.controllers;
 
-import java.util.HashSet;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,25 +28,27 @@ public class AccountRegisterController {
     private AccountRepository accountRepository;
 
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
     
     @GetMapping("/register")
-    public String showRegistrationForm() {
+    public String showRegistrationForm(@ModelAttribute Account account) {
         return "register";
-    }
+    } 
     
     @PostMapping("/register")
-    public String registerUser(Model model, @RequestParam String username, 
-            @RequestParam String password, 
-            @RequestParam String passwordConfirm, 
-            @RequestParam String nickname) {
-        Account a = new Account();
-        //implement account validation and password confirmation validationKaKai s
-
-        a.setUsername(username);
-        a.setPassword(passwordEncoder.encode(password));
-        a.setNickname(nickname);
-        accountRepository.save(a);
+    public String registerUser(@Valid @ModelAttribute Account account, BindingResult bindingResult) {
+        if (!account.getPassword().equals(account.getPasswordConfirm())) {
+            bindingResult.rejectValue("passwordConfirm", "error.account", "Passwords do not match");
+        }
+        if (account.getPassword().length() > 20) {
+            bindingResult.rejectValue("password", "error.account", "Password too long, maximum 20 characters");
+        }
+        if (bindingResult.hasErrors()) {
+            return "register";
+        }
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        account.setPasswordConfirm("ok");
+        accountRepository.save(account);
         return "redirect:/login";
     }
 }

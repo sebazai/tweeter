@@ -15,6 +15,8 @@ import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,11 +29,16 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 public class Account extends AbstractPersistable<Long> {
     
     @Column(unique=true)
+    @Size(min = 3, max = 15)
     private String username;
     
+    @Size(min = 8, max = 100)
     private String password;
     
+    private String passwordConfirm;
+    
     @Column(unique=true)
+    @Size(min = 3, max= 15)
     private String nickname;
     
     @Lob

@@ -1,4 +1,4 @@
-<!DOCTYPE HTML>
+<!--<!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
     <head>
         <meta charset="UTF-8" />
@@ -28,6 +28,45 @@
                 <input type="submit"/>            
             </form>
         </div>
+    </body>
+</html>-->
+
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Register new user</title>
+        <meta charset="UTF-8" />
+    </head>
+    <body>
+        <h1>Register new user</h1>
+        Enter information and press submit:<br/>
+        <form action="#" th:action="@{/register}" th:object="${account}" method="POST">
+            <table>
+                <tr>
+                    <td>Name: </td>
+                    <td><input type="text" th:field="*{username}" /></td>
+                    <td th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Username error</td>
+                </tr>
+                <tr>
+                    <td>Password: </td>
+                    <td><input type="password" th:field="*{password}" /></td>
+                    <td th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</td>
+                </tr>
+                <tr>
+                    <td>Confirm password: </td>
+                    <td><input type="password" th:field="*{passwordConfirm}" /></td>
+                    <td th:if="${#fields.hasErrors('passwordConfirm')}" th:errors="*{passwordConfirm}">PasswordConfirm error</td>
+                </tr>
+                <tr>
+                    <td>Nickname: </td>
+                    <td><input type="text" th:field="*{nickname}" /></td>
+                    <td th:if="${#fields.hasErrors('nickname')}" th:errors="*{nickname}">Nickname error</td>
+                </tr>
+                <tr>
+                    <td><button type="submit">Submit</button></td>
+                </tr>
+            </table>
+        </form>
     </body>
 </html>
 
