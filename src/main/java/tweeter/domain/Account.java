@@ -60,8 +60,5 @@ public class Account extends AbstractPersistable<Long> {
     
     @OneToMany(mappedBy = "account")
     List<Comments> comments = new ArrayList<>();
-    
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    private List<String> authorities;
 
 }
