@@ -5,9 +5,9 @@
  */
 package tweeter.controllers;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +26,9 @@ public class UserSearchController {
     private AccountRepository accountRepo;
     
     @GetMapping("/search")
-    public String searchUsers(Model model) {
+    public String searchUsers(Authentication auth, Model model) {
+        String username = auth.getName();
+        model.addAttribute("account", accountRepo.findByUsername(username));
         model.addAttribute("users", accountRepo.findAll());
         return "search";
     }

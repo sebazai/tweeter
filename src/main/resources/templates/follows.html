@@ -1,17 +1,28 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head>
+    <head th:replace="fragments/layout :: head(title='Follows')">
         <meta charset="UTF-8" />
-        <title th:text="${'Users ' + account.nickname + ' followers'}"></title>
+        <title>Hello world</title>
     </head>
     <body>
+        <div class="container">
+            <div th:replace="fragments/layout.html :: links(nickname=${account.nickname})"></div>
 
-        <h1>Hi</h1>
-
-        <div th:each="f : ${follow}">
-            Started following: <span th:text="${#temporals.format(f.startedFollowing, 'dd-MM-yyyy HH:mm')}"></span><br />
-            Follower: <span th:text="${f.thefollower.nickname}"></span>
-            <form><input type="submit" value="Block user" /></form>
+            <h1>Hi</h1>
+            <div th:if="${followers}">
+                <div th:each="f : ${follow}">
+                    Started following: <span th:text="${#temporals.format(f.startedFollowing, 'dd-MM-yyyy HH:mm')}"></span><br />
+                    Follower: <span th:text="${f.thefollower.nickname}"></span>
+                    <form><input type="submit" value="Block user" /></form>
+                </div>
+            </div>
+            <div th:unless="${followers}">
+                <div th:each="f : ${follow}">
+                    Started following: <span th:text="${#temporals.format(f.startedFollowing, 'dd-MM-yyyy HH:mm')}"></span><br />
+                    Following: <span th:text="${f.account.nickname}"></span>
+                    <form><input type="submit" value="Block user" /></form>
+                </div>
+            </div>
         </div>
     </body>
 </html>

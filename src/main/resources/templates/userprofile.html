@@ -1,47 +1,36 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head>
+    <head th:replace="fragments/layout :: head(title='The wall')">
         <meta charset="UTF-8" />
         <title>Hello world</title>
     </head>
     <body>
-        <ul>
-            <li>
-                <a th:href="@{/users/{nick}/followers(nick=${account.nickname})}">Followers</a>
-            </li>
-            <li>
-                <a th:href="@{/users/{nick}/following(nick=${account.nickname})}">Following</a>
-            </li>
-            <li>
-                <a th:href="@{/search}">Search</a>
-            </li>
-            <li>
-                <a th:href="@{/logout}">Logout</a>
-            </li>
-        </ul>
-        <div th:if="${owner}">
-            <h1 th:text="${'Hello ' + account.nickname}">Hello world</h1>
-            <h2>
-                What's on your mind?
-            </h2>
-            <form method="POST" th:action="@{/shout}">
-                <input type="text" name="tweeter" id="tweeter" />
-                <input type="submit" value="Shout!" />
-            </form>
-        </div>
-        <div th:if="${owner}">
-            <div th:each="message: ${messages}">
-                <div th:text="${message.message}"></div>
-                <div th:text="${#temporals.format(message.messageTime, 'dd-MM-yyyy HH:mm')}"></div><br />
-            </div>
-        </div>
-        <div th:unless="${owner}">
-            <div th:each="message: ${messages}">
-                <div th:text="${message.message}"></div>
-                <div th:text="${#temporals.format(message.messageTime, 'dd-MM-yyyy HH:mm')}"></div><br />
-            </div>
-        </div>
+        <div class="container">
+            <div th:replace="fragments/layout.html :: links(nickname=${account.nickname})"></div>
 
+            <div th:if="${owner}">
+                <h1 th:text="${'Hello ' + account.nickname}">Hello world</h1>
+                <h2>
+                    What's on your mind?
+                </h2>
+                <form method="POST" th:action="@{/shout}">
+                    <input type="text" name="tweeter" id="tweeter" />
+                    <input type="submit" value="Shout!" />
+                </form>
+            </div>
+            <div th:if="${owner}">
+                <div th:each="message: ${messages}">
+                    <div th:text="${message.message}"></div>
+                    <div th:text="${#temporals.format(message.messageTime, 'dd-MM-yyyy HH:mm')}"></div><br />
+                </div>
+            </div>
+            <div th:unless="${owner}">
+                <div th:each="message: ${messages}">
+                    <div th:text="${message.message}"></div>
+                    <div th:text="${#temporals.format(message.messageTime, 'dd-MM-yyyy HH:mm')}"></div><br />
+                </div>
+            </div>
+        </div>
     </body>
 </html>
 

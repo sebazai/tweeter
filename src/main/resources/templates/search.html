@@ -1,23 +1,25 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head>
+    <head th:replace="fragments/layout :: head(title='Search')">
         <meta charset="UTF-8" />
-        <title>User search</title>
+        <title>Hello world</title>
     </head>
     <body>
-
-        <h1>Search for users</h1>
-        <form method="POST" th:action="@{/search}">
-            <input type="text" name="searchstring" id="searchstring" />
-            <input type="submit" value="Search!" />
-        </form>
-        <span th:if="${users.size() == 0}">Nothing found</span>
-        <div th:unless="${users.size() == 0}">
-            <div th:each="user : ${users}">
-                <a th:href="@{/users/{nick}(nick = ${user.nickname})}" th:text="${user.nickname}"></a>
-                <form method="POST" th:action="@{/follow}">
-                    <input type="hidden" th:value="${user.getId()}" name="idtofollow" id="idtofollow" />
-                    <input type="submit" value="follow" /></form>
+        <div class="container">
+            <div th:replace="fragments/layout.html :: links(nickname=${account.nickname})"></div>
+            <h1>Search for users</h1>
+            <form method="POST" th:action="@{/search}">
+                <input type="text" name="searchstring" id="searchstring" />
+                <input type="submit" value="Search!" />
+            </form>
+            <span th:if="${users.size() == 0}">Nothing found</span>
+            <div th:unless="${users.size() == 0}">
+                <div th:each="user : ${users}">
+                    <a th:href="@{/users/{nick}(nick = ${user.nickname})}" th:text="${user.nickname}"></a>
+                    <form method="POST" th:action="@{/follow}">
+                        <input type="hidden" th:value="${user.getId()}" name="idtofollow" id="idtofollow" />
+                        <input type="submit" value="follow" /></form>
+                </div>
             </div>
         </div>
     </body>
