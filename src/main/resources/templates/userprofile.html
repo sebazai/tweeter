@@ -14,21 +14,27 @@
                     What's on your mind?
                 </h2>
                 <form method="POST" th:action="@{/shout}">
-                    <input type="text" name="tweeter" id="tweeter" />
+                    <textarea name="tweeter" id="tweeter"></textarea><br />
                     <input type="submit" value="Shout!" />
                 </form>
             </div>
-            <div th:if="${owner}">
-                <div th:each="message: ${messages}">
-                    <div th:text="${message.message}"></div>
-                    <div th:text="${#temporals.format(message.messageTime, 'dd-MM-yyyy HH:mm')}"></div><br />
-                </div>
-            </div>
-            <div th:unless="${owner}">
+
+            <div>
                 <div th:if="${messages.size() == 0}" th:text="'No posts by ' + ${account.nickname}"></div>
                 <div th:each="message: ${messages}">
                     <div th:text="${message.message}"></div>
                     <div th:text="${#temporals.format(message.messageTime, 'dd-MM-yyyy HH:mm')}"></div><br />
+                    <form method="POST" th:action="@{/comment/{postid}(postid = ${message.id})}">
+                        <textarea id="comment" name="comment" rows="2" cols="30"></textarea><br />
+                        <input type="submit" value="Comment" />
+                    </form>
+                    <div th:unless='${message.comments.size() == 0}'>
+                        <div style="padding-bottom: 5px" th:each="comment: ${message.getComments()}">
+                            <span th:text="'Comment by ' + ${comment.account.nickname}"></span>
+                            <span th:text="${#temporals.format(comment.commentTime, 'dd-MM-yyyy HH:mm')}"></span>
+                            <div th:text="'Commented: ' + ${comment.comment}"></div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

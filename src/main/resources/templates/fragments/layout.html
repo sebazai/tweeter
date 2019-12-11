@@ -28,7 +28,7 @@
                     </li>
                     <li class="nav-item">
                         <a th:if="${owner}" class="nav-link" th:href="@{/users/{nick}/following(nick=${nickname})}">Following</a>
-                        <a th:unless="${owner}" class="nav-link" th:text="${nickname} + ' following'" th:href="@{/users/{nick}/following(nick=${nickname})}">Following</a>
+                        <a th:unless="${owner}" class="nav-link" th:text="${nickname} + ' following'    " th:href="@{/users/{nick}/following(nick=${nickname})}">Following</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/search}">Search</a>

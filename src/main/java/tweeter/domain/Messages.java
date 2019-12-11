@@ -7,6 +7,7 @@ package tweeter.domain;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
@@ -24,7 +25,7 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Messages  extends AbstractPersistable<Long> {
+public class Messages extends AbstractPersistable<Long> implements Comparable<Messages> {
     private LocalDateTime messageTime = LocalDateTime.now();
     private String message;
     
@@ -36,4 +37,14 @@ public class Messages  extends AbstractPersistable<Long> {
     
     @OneToMany(mappedBy = "messages")
     private List<Comments> comments = new ArrayList<>();
+    
+    public List<Comments> getComments() {
+        Collections.sort(comments, Collections.reverseOrder());
+        return comments;
+    }
+
+    @Override
+    public int compareTo(Messages t) {
+        return this.messageTime.compareTo(t.getMessageTime());
+    }
 }

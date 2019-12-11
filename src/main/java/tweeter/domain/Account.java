@@ -6,6 +6,7 @@
 package tweeter.domain;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -60,5 +61,10 @@ public class Account extends AbstractPersistable<Long> {
     
     @OneToMany(mappedBy = "account")
     List<Comments> comments = new ArrayList<>();
+    
+    public List<Messages> getMessages() {
+        Collections.sort(messages, Collections.reverseOrder());
+        return messages;
+    }
 
 }

@@ -6,14 +6,18 @@
 package tweeter.controllers;
 
 import java.time.LocalDateTime;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import tweeter.domain.Account;
+import tweeter.domain.Comments;
 import tweeter.domain.Messages;
 import tweeter.repositories.AccountRepository;
+import tweeter.repositories.CommentsRepository;
 import tweeter.repositories.MessagesRepository;
 
 /**
@@ -27,6 +31,9 @@ public class MessageController {
     private MessagesRepository messageRepo;
     
     @Autowired
+    private CommentsRepository commentsRepo;
+    
+    @Autowired
     private AccountRepository accountRepo;
     
     @PostMapping("/shout")
@@ -38,5 +45,18 @@ public class MessageController {
         messageRepo.save(message);
         String nick = a.getNickname();
         return "redirect:/users/" + nick;
+    }
+    
+    @PostMapping("/comment/{postid}")
+    public String commentPostId(Authentication auth, @PathVariable Long postid, @RequestParam String comment) {
+        Account acc = accountRepo.findByUsername(auth.getName());
+        Messages message = messageRepo.getOne(postid);
+        String user = message.getAccount().getNickname();
+        Comments c = new Comments();
+        c.setComment(comment);
+        c.setAccount(acc);
+        c.setMessages(message);
+        commentsRepo.save(c);
+        return "redirect:/users/" + user;
     }
 }
