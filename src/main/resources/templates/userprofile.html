@@ -6,7 +6,7 @@
     </head>
     <body>
         <div class="container">
-            <div th:replace="fragments/layout.html :: links(nickname=${account.nickname})"></div>
+            <div th:replace="fragments/layout.html :: links(nickname=${account.nickname}, owner=${owner})"></div>
 
             <div th:if="${owner}">
                 <h1 th:text="${'Hello ' + account.nickname}">Hello world</h1>
@@ -25,6 +25,7 @@
                 </div>
             </div>
             <div th:unless="${owner}">
+                <div th:if="${messages.size() == 0}" th:text="'No posts by ' + ${account.nickname}"></div>
                 <div th:each="message: ${messages}">
                     <div th:text="${message.message}"></div>
                     <div th:text="${#temporals.format(message.messageTime, 'dd-MM-yyyy HH:mm')}"></div><br />

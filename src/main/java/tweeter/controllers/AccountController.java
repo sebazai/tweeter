@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import tweeter.domain.Account;
 import tweeter.domain.Followers;
+import tweeter.repositories.AccountRepository;
 import tweeter.repositories.FollowersRepository;
 import tweeter.services.AccountService;
 
@@ -26,8 +27,15 @@ public class AccountController {
     
     @Autowired
     private AccountService accountService;
+    
     @Autowired
-    private FollowersRepository followerRepo;
+    private AccountRepository accountRepo;
+    
+    @GetMapping("/users")
+    public String redirectToOwnWall(Authentication auth, Model model) {
+        Account a = accountRepo.findByUsername(auth.getName());
+        return "redirect:/users/" + a.getNickname();
+    }
     
     @GetMapping("/users/{nick}")
     public String getUserProfile(Authentication auth, Model model, @PathVariable String nick) {
@@ -42,33 +50,6 @@ public class AccountController {
         model.addAttribute("messages", a.getMessages());
         return "userprofile";
     }
-    
-    @GetMapping("/users/{nick}/followers")
-    public String showUserFollowers(Model model, @PathVariable String nick) {
-        Account a = accountService.findAccount(nick);
-        if (a == null) {
-            return "redirect:/404notfound";
-        }
-        List<Followers> followers = a.getFollowers();
-        model.addAttribute("account", a);
-        model.addAttribute("follow", followers);
-        model.addAttribute("followers", true);
-        return "follows";
-    }
-    
-    @GetMapping("/users/{nick}/following")
-    public String showWhoUserIsFollowing(Model model, @PathVariable String nick) {
-        Account a = accountService.findAccount(nick);
-        if (a == null) {
-            return "redirect:/404notfound";
-        }
-        List<Followers> following = followerRepo.findByThefollowerId(a.getId());
-        model.addAttribute("account", a);
-        model.addAttribute("follow", following);
-        model.addAttribute("followers", false);
-        return "follows";
-    }
-    
 
 }
 

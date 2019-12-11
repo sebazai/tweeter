@@ -6,21 +6,23 @@
     </head>
     <body>
         <div class="container">
-            <div th:replace="fragments/layout.html :: links(nickname=${account.nickname})"></div>
+            <div th:replace="fragments/layout.html :: links(nickname=${account.nickname}, owner=true)"></div>
 
-            <h1>Hi</h1>
             <div th:if="${followers}">
                 <div th:each="f : ${follow}">
-                    Started following: <span th:text="${#temporals.format(f.startedFollowing, 'dd-MM-yyyy HH:mm')}"></span><br />
-                    Follower: <span th:text="${f.thefollower.nickname}"></span>
-                    <form><input type="submit" value="Block user" /></form>
+                    <div style="padding-bottom: 5px">
+                        Started following: <span th:text="${#temporals.format(f.startedFollowing, 'dd-MM-yyyy HH:mm')}"></span><br />
+                        Follower: <a th:href="@{/users/{nick}(nick = ${f.thefollower.nickname})}" th:text="${f.thefollower.nickname}"></a>
+                        <form th:if="${owner}"><input type="submit" value="Block user" /></form>
+                    </div>
                 </div>
             </div>
             <div th:unless="${followers}">
                 <div th:each="f : ${follow}">
-                    Started following: <span th:text="${#temporals.format(f.startedFollowing, 'dd-MM-yyyy HH:mm')}"></span><br />
-                    Following: <span th:text="${f.account.nickname}"></span>
-                    <form><input type="submit" value="Block user" /></form>
+                    <p>
+                        Started following: <span th:text="${#temporals.format(f.startedFollowing, 'dd-MM-yyyy HH:mm')}"></span><br />
+                        Following: <a th:href="@{/users/{nick}(nick = ${f.account.nickname})}" th:text="${f.account.nickname}"></a>
+                    </p>
                 </div>
             </div>
         </div>

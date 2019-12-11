@@ -12,18 +12,23 @@
         <meta charset="UTF-8" />
     </head>
     <body>
-        <div th:fragment="links(nickname)">
+        <div th:fragment="links(nickname, owner)">
             <nav class="navbar navbar-expand-sm">
             <div class="collapse navbar-collapse">  
                 <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/users/{nick}(nick=${nickname})}">The wall</a>
+                        <a class="nav-link" th:href="@{/users}">Your wall</a>
+                    </li>
+                    <li th:unless="${owner}" class="nav-item">
+                        <a class="nav-link" th:text="${nickname} + ' wall'" th:href="@{/users/{nick}(nick=${nickname})}"></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/users/{nick}/followers(nick=${nickname})}">Followers</a>
+                        <a th:if="${owner}" class="nav-link" th:href="@{/users/{nick}/followers(nick=${nickname})}">Followers</a>
+                        <a th:unless="${owner}" class="nav-link" th:text="${nickname} + ' followers'" th:href="@{/users/{nick}/followers(nick=${nickname})}">Followers</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{/users/{nick}/following(nick=${nickname})}">Following</a>
+                        <a th:if="${owner}" class="nav-link" th:href="@{/users/{nick}/following(nick=${nickname})}">Following</a>
+                        <a th:unless="${owner}" class="nav-link" th:text="${nickname} + ' following'" th:href="@{/users/{nick}/following(nick=${nickname})}">Following</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{/search}">Search</a>

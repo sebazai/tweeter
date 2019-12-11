@@ -16,4 +16,5 @@ import tweeter.domain.Followers;
  */
 public interface FollowersRepository extends JpaRepository<Followers, Long>{
     public List<Followers> findByThefollowerId(Long id);
+    public Followers findByAccountIdAndThefollowerId(Long accountid, Long followerid);
 }
