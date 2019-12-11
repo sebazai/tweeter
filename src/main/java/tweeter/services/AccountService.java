@@ -30,9 +30,6 @@ public class AccountService {
     }
     
     public boolean isOwner(Authentication auth, Account a) {
-        if (auth.getName().equals(a.getUsername())) {
-            return true;
-        }
-        return false;
+        return auth.getName().equals(a.getUsername());
     }
 }

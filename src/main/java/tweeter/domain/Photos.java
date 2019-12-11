@@ -5,9 +5,13 @@
  */
 package tweeter.domain;
 
+import org.hibernate.annotations.Type;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Basic;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
@@ -25,7 +29,12 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @AllArgsConstructor
 public class Photos extends AbstractPersistable<Long> {
     private String photoText;
+    
+    @Lob
+    @Basic(fetch = FetchType.LAZY)  
+    //@Type(type = "org.hibernate.type.BinaryType")
     private byte[] photo;
+    
     @ManyToOne
     private Account account;
     

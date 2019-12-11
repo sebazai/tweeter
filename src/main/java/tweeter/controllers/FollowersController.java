@@ -5,12 +5,11 @@
  */
 package tweeter.controllers;
 
-import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +19,7 @@ import tweeter.domain.Followers;
 import tweeter.repositories.AccountRepository;
 import tweeter.repositories.FollowersRepository;
 import tweeter.services.AccountService;
+import tweeter.services.FollowersService;
 
 /**
  *
@@ -29,6 +29,9 @@ import tweeter.services.AccountService;
 public class FollowersController {
     @Autowired
     private FollowersRepository followerRepo;
+    
+    @Autowired
+    private FollowersService followerService;
     
     @Autowired
     private AccountRepository accountRepo;
@@ -63,24 +66,37 @@ public class FollowersController {
         if (a == null) {
             return "redirect:/404notfound";
         }
-        List<Followers> followers = a.getFollowers();
-        model.addAttribute("owner", accountService.isOwner(auth, a));
-        model.addAttribute("account", a);
-        model.addAttribute("follow", followers);
-        model.addAttribute("followers", true);
+        followerService.returnFollowModel(model, true, auth, a, "");
         return "follows";
     }
     
     @GetMapping("/users/{nick}/following")
-    public String showWhoUserIsFollowing(Model model, @PathVariable String nick) {
+    public String showWhoUserIsFollowing(Authentication auth, Model model, @PathVariable String nick) {
         Account a = accountService.findAccount(nick);
         if (a == null) {
             return "redirect:/404notfound";
         }
-        List<Followers> following = followerRepo.findByThefollowerId(a.getId());
-        model.addAttribute("account", a);
-        model.addAttribute("follow", following);
-        model.addAttribute("followers", false);
+        followerService.returnFollowModel(model, false, auth, a, "");
+        return "follows";
+    }
+    
+    @Transactional
+    @PostMapping("/follower/block/{idtoblock}")
+    public String removeAndBlockFollower(Model model, Authentication auth, @PathVariable Long idtoblock) {
+        Account loggedinacc = accountRepo.findByUsername(auth.getName());
+        Followers follower = followerRepo.findByAccountIdAndThefollowerId(loggedinacc.getId(), idtoblock);
+        follower.setBlocked(true);
+        followerService.returnFollowModel(model, true, auth, loggedinacc, "Removed and blocked user " + follower.getThefollower().getNickname() + "");
+        return "follows";
+    }
+    
+    @PostMapping("/follower/unfollow/{id}")
+    public String unfollowUser(Model model, Authentication auth, @PathVariable Long id) {
+        Account loggedinacc = accountRepo.findByUsername(auth.getName());
+        Followers follower = followerRepo.findByAccountIdAndThefollowerId(id, loggedinacc.getId());
+        String noti = "Unfollowed user " + follower.getThefollower().getNickname() + "";
+        followerRepo.delete(follower);
+        followerService.returnFollowModel(model, false, auth, loggedinacc, noti);
         return "follows";
     }
 }

@@ -42,9 +42,7 @@ public class Account extends AbstractPersistable<Long> {
     @Size(min = 3, max= 15)
     private String nickname;
     
-    @Lob
-    @Basic(fetch = FetchType.LAZY)
-    private byte[] profilepic;
+    private Long profilePicId;
     
    
     @OneToMany(mappedBy = "account")

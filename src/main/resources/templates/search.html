@@ -5,20 +5,24 @@
         <title>Hello world</title>
     </head>
     <body>
+        <div class="col-md-12" th:replace="fragments/layout.html :: links(nickname=${account.nickname}, owner=true)"></div>
         <div class="container">
-            <div th:replace="fragments/layout.html :: links(nickname=${account.nickname}, owner=true)"></div>
+            
             <h1>Search for users</h1>
             <div th:text="${notification}"></div>
             <form method="POST" th:action="@{/search}">
                 <input type="text" name="searchstring" id="searchstring" />
                 <input type="submit" value="Search!" />
             </form>
+
+            
             <span th:if="${users.size() == 0}">Nothing found</span>
             <div th:unless="${users.size() == 0}">
                 <div th:each="user : ${users}">
-                    <a th:href="@{/users/{nick}(nick = ${user.nickname})}" th:text="${user.nickname}"></a>
-                    <div th:unless="${account.id} == ${user.id}">
+                    
+                    <div style="padding: 10px 5px;" th:unless="${account.id} == ${user.id}">
                         <form method="POST" th:action="@{/follow}">
+                            <a th:href="@{/users/{nick}(nick = ${user.nickname})}" th:text="${user.nickname}"></a>
                             <input type="hidden" th:value="${user.getId()}" name="idtofollow" id="idtofollow" />
                             <input type="submit" value="follow" />
                         </form>

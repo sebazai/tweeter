@@ -4,27 +4,33 @@
         <meta charset="UTF-8" />
         <title>Hello world</title>
     </head>
-    <body>
+    <body style="padding-top: 0px">
+        <div th:replace="fragments/layout.html :: links(nickname=${account.nickname}, owner=${owner})"></div>
         <div class="container">
-            <div th:replace="fragments/layout.html :: links(nickname=${account.nickname}, owner=true)"></div>
+            
 
             <div th:if="${followers}">
                 <div th:if='${follow.size() == 0}'>No followers :(</div>
                 <div th:unless="${follow.size() == 0}" th:each="f : ${follow}">
-                    <div style="padding-bottom: 5px">
-                        Started following: <span th:text="${#temporals.format(f.startedFollowing, 'dd-MM-yyyy HH:mm')}"></span><br />
-                        Follower: <a th:href="@{/users/{nick}(nick = ${f.thefollower.nickname})}" th:text="${f.thefollower.nickname}"></a>
-                        <form th:if="${owner}"><input type="submit" value="Block user" /></form>
+                    <div th:unless="${f.blocked}" style="padding-bottom: 5px">
+                        <form method="POST" th:action="@{/follower/block/{id}(id=${f.thefollower.id})}" th:if="${owner}">
+                            Started following: <span th:text="${#temporals.format(f.startedFollowing, 'dd-MM-yyyy HH:mm')}"></span><br />
+                            Follower: <a th:href="@{/users/{nick}(nick = ${f.thefollower.nickname})}" th:text="${f.thefollower.nickname}"></a>
+                            <input type="submit" value="Block user" />
+                        </form>
                     </div>
                 </div>
             </div>
             <div th:unless="${followers}">
                 <div th:if='${follow.size() == 0}'>Following no one</div>
                 <div th:unless="${follow.size() == 0}" th:each="f : ${follow}">
-                    <p>
-                        Started following: <span th:text="${#temporals.format(f.startedFollowing, 'dd-MM-yyyy HH:mm')}"></span><br />
-                        Following: <a th:href="@{/users/{nick}(nick = ${f.account.nickname})}" th:text="${f.account.nickname}"></a>
-                    </p>
+                    <div style="padding-bottom: 5px" th:unless="${f.blocked}">
+                        <form method="POST" th:action="@{/follower/unfollow/{id}(id=${f.account.id})}" th:if="${owner}">
+                            Started following: <span th:text="${#temporals.format(f.startedFollowing, 'dd-MM-yyyy HH:mm')}"></span><br />
+                            Following: <a th:href="@{/users/{nick}(nick = ${f.account.id})}" th:text="${f.account.nickname}"></a>
+                            <input type="submit" value="Unfollow" />
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
