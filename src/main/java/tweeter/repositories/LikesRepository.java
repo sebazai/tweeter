@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import tweeter.domain.Account;
 import tweeter.domain.Likes;
 import tweeter.domain.Messages;
+import tweeter.domain.Photos;
 
 /**
  *
@@ -18,4 +19,5 @@ import tweeter.domain.Messages;
  */
 public interface LikesRepository extends JpaRepository<Likes, Long>{
     public Likes findByAccountAndMessages(Account acc, Messages message);
+    public Likes findByAccountAndPhotos(Account acc, Photos photo);
 }

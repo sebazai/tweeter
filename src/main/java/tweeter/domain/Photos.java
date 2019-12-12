@@ -7,6 +7,7 @@ package tweeter.domain;
 
 import org.hibernate.annotations.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.persistence.Basic;
 import javax.persistence.Entity;
@@ -43,4 +44,9 @@ public class Photos extends AbstractPersistable<Long> {
     
     @OneToMany(mappedBy = "photos")
     private List<Comments> comments = new ArrayList<>();
+    
+    public List<Comments> getComments() {
+        Collections.sort(comments, Collections.reverseOrder());
+        return comments;
+    }
 }

@@ -52,7 +52,6 @@
             <span th:unless="${account.profilePicId} == null">
                 <img
                     class="card-img-top"
-                    style="min-width: 10%; max-width: 20%; min-height: 10%; max-height: 20%"
                     th:src="@{/users/img/{id}(id=${account.profilePicId})}"
                     alt="profilepic" />
             </span>
