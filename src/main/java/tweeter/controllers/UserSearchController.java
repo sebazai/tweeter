@@ -39,6 +39,11 @@ public class UserSearchController {
         String username = auth.getName();
         model.addAttribute("account", accountRepo.findByUsername(username));
         List<Account> foundUsers = accountRepo.findByNicknameContaining(searchstring);
+        if (foundUsers.size() > 0) {
+            model.addAttribute("notification", "Found these users");
+        } else {
+            model.addAttribute("notification", "No users found");
+        }
         model.addAttribute("users", foundUsers);
         return "search";
     }
