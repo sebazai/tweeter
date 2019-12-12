@@ -18,15 +18,14 @@
             </form>
 
             
-            <span th:if="${users.size() == 0}">Nothing found</span>
             <div th:unless="${users.size() == 0}">
                 <div th:each="user : ${users}">
                     
-                    <div style="padding: 10px 5px;" th:unless="${account.id} == ${user.id}">
+                    <div style="padding: 10px 5px;">
                         <form method="POST" th:action="@{/follow}">
                             <a th:href="@{/users/{nick}(nick = ${user.nickname})}" th:text="${user.nickname}"></a>
                             <input type="hidden" th:value="${user.getId()}" name="idtofollow" id="idtofollow" />
-                            <input class='btn btn-primary ml-5' type="submit" value="Follow" />
+                            <input th:unless="${account.id} == ${user.id}" class='btn btn-primary ml-5' type="submit" value="Follow" />
                         </form>
                     </div>
                 </div>
