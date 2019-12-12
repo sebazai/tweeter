@@ -30,12 +30,13 @@
                             <img class="card-img-top"
                                 th:src="@{/users/img/{id}(id=${img.id})}" />
                             <form class="card-header" method="POST" th:action="@{/users/{username}/profilepic/{picid}(username=${account.nickname}, picid=${img.id})}">
-                            <div style="float:left" th:text="${img.photoText}"></div>
-                            <div style="float:right" th:if="${owner}">    
-                                <input type="submit" value="Set as profilepic" class="btn btn-primary" />
+                                <div style="float:left" th:text="${img.photoText}"></div>
+                                <div style="float:right" th:if="${owner}">    
+                                    <input type="submit" value="Set as profilepic" class="btn btn-primary" />
+                                    <input type="submit" value="Delete" th:form="'deleteform' + ${img.id}" class="btn btn-danger" />
                                 </div>
                             </form>
-                            
+                            <form th:id="'deleteform'+${img.id}" method="POST" th:action="@{/delete/img/{imgid}(imgid = ${img.id})}"></form>
                             <div class="card">
                                 <h5 class="card-header">
                                     <a style="float:left" class="btn btn-primary" data-toggle="collapse" th:href="'#collapseMessage' + ${img.id}" role="button" aria-expanded="false" th:aria-controls="'collapseMessage' + ${img.id}">

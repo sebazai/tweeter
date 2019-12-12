@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import javax.persistence.Basic;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Lob;
@@ -39,10 +40,10 @@ public class Photos extends AbstractPersistable<Long> {
     @ManyToOne
     private Account account;
     
-    @OneToMany(mappedBy = "photos")
+    @OneToMany(mappedBy = "photos", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Likes> likes = new ArrayList<>();
     
-    @OneToMany(mappedBy = "photos")
+    @OneToMany(mappedBy = "photos", cascade=CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Comments> comments = new ArrayList<>();
     
     public List<Comments> getComments() {

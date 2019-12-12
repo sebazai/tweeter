@@ -115,4 +115,12 @@ public class PhotosController {
         return "redirect:/users/" + user + "/album";
     }
     
+    @PostMapping("/delete/img/{imgid}")
+    public String deleteImgId(Authentication auth, @PathVariable Long imgid) {
+        Photos photo = photosRepo.getOne(imgid);
+        String user = photo.getAccount().getNickname();
+        photosRepo.delete(photo);
+        return "redirect:/users/" + user + "/album";
+    }
+    
 }
