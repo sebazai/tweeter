@@ -12,10 +12,10 @@
                 <div class="col-md">
                     <div th:if="${owner}">
                         <h3>Insert new photos</h3>
-                        <div th:text="${notification}"></div>
+                        
                         <form enctype="multipart/form-data" class="form-group" method="POST" th:action="@{/users/{user}/img(user=${account.nickname})}">
                             <input class="mb-3" type="file" name="file" id="file" /><br />
-                            <input class="mb-3 form-control" type="text" placeholder="Photo description" name="description" />
+                            <input class="mb-3 form-control" type="text" placeholder="Photo description <optional>" name="description" />
                             <input type="submit" class="btn btn-primary" value="Add photo" />
                         </form>
                     </div>
@@ -23,6 +23,10 @@
                     <h1 th:text="${account.nickname} + 's album'"></h1>
                     <div th:if="${account.photos.size() == 0}">
                         No photos to display
+                    </div>
+                    
+                    <div th:unless="${notification == ''}">
+                    <div class="alert alert-danger" th:text="${notification}"></div>
                     </div>
                     
                     <div th:unless="${account.photos.size() == 0}">
@@ -46,12 +50,12 @@
                                 </h5>
                                 <div class="collapse" th:id="'collapseMessage' + ${img.id}">
                                     <div class="card card-body">
-                                        <form method="POST" th:action="@{/comment/img/{imgid}(imgid = ${img.id})}">
+                                        <form method="POST" th:action="@{/comment/{user}/img/{imgid}(user=${account.nickname}, imgid = ${img.id})}">
                                             <textarea id="comment" name="comment" rows="5" cols="60"></textarea><br />
                                             <input type="submit" class="btn btn-primary" value="Comment" />
                                             <input value="Like" class="btn btn-primary" th:form="'likeform' + ${img.id}" type="submit" />
                                         </form>
-                                        <form th:id="'likeform'+${img.id}" method="POST" th:action="@{/like/img/{imgid}(imgid = ${img.id})}"></form>
+                                        <form th:id="'likeform'+${img.id}" method="POST" th:action="@{/like/{user}/img/{imgid}(user=${account.nickname}, imgid = ${img.id})}"></form>
                                     </div>
                                 </div>
                             </div>

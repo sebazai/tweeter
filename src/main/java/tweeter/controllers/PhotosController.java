@@ -53,6 +53,7 @@ public class PhotosController {
         Account a = accountRepo.findByUsername(user);
         model.addAttribute("account", a);
         model.addAttribute("owner", accountService.isOwner(auth, a));
+        model.addAttribute("notification", "");
         return "album";
     }
 
@@ -71,6 +72,12 @@ public class PhotosController {
             model.addAttribute("notification", "Only 10 photos allowed, you have reached your limit.");
             return "album";
         }
+        if (!file.getContentType().contains("image") || file.getSize() == 0 || file.getSize() > 100000) {
+            model.addAttribute("notification", "File not image, or empty or is too big.");
+            model.addAttribute("account", a);
+            model.addAttribute("owner", accountService.isOwner(auth, a));
+            return "album";
+        }
         Photos photo = new Photos();
         photo.setAccount(a);
         photo.setPhotoText(description);
@@ -87,38 +94,45 @@ public class PhotosController {
         return "redirect:/users/{username}/album";
     }
     
-    @PostMapping("/comment/img/{imgid}")
-    public String commentImgId(Authentication auth, @PathVariable Long imgid, @RequestParam String comment) {
+    @PostMapping("/comment/{user}/img/{imgid}")
+    public String commentImgId(Model model, Authentication auth, @PathVariable Long imgid, @RequestParam String comment, @PathVariable String user) {
         Account acc = accountRepo.findByUsername(auth.getName());
         Photos photo = photosRepo.getOne(imgid);
-        String user = photo.getAccount().getNickname();
+        if (comment.length() < 3 || comment.length() > 100) {
+            model.addAttribute("account", photo.getAccount());
+            model.addAttribute("owner", accountService.isOwner(auth, acc));
+            model.addAttribute("notification", "Comments should be between 3-100 chars");
+            return "album";
+        }
         Comments c = new Comments();
         c.setComment(comment);
         c.setAccount(acc);
         c.setPhotos(photo);
         commentsRepo.save(c);
-        return "redirect:/users/" + user + "/album";
+        return "redirect:/users/{user}/album";
     }
     
-    @PostMapping("/like/img/{imgid}")
-    public String likeImgId(Authentication auth, @PathVariable Long imgid) {
+    @PostMapping("/like/{user}/img/{imgid}")
+    public String likeImgId(Authentication auth, @PathVariable Long imgid, @PathVariable String user) {
         Account acc = accountRepo.findByUsername(auth.getName());
         Photos photo = photosRepo.getOne(imgid);
-        String user = photo.getAccount().getNickname();
         if (likesRepo.findByAccountAndPhotos(acc, photo) != null) {
-            return "redirect:/users/" + user + "/album";
+            return "redirect:/users/{user}/album";
         }
         Likes l = new Likes();
         l.setAccount(acc);
         l.setPhotos(photo);
         likesRepo.save(l);
-        return "redirect:/users/" + user + "/album";
+        return "redirect:/users/{user}/album";
     }
     
     @PostMapping("/delete/img/{imgid}")
     public String deleteImgId(Authentication auth, @PathVariable Long imgid) {
         Photos photo = photosRepo.getOne(imgid);
         String user = photo.getAccount().getNickname();
+        if (photo.getAccount().getProfilePicId() == imgid) {
+            photo.getAccount().setProfilePicId(null);
+        }
         photosRepo.delete(photo);
         return "redirect:/users/" + user + "/album";
     }

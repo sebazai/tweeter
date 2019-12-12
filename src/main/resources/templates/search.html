@@ -9,10 +9,12 @@
         <div class="container">
             
             <h1>Search for users</h1>
-            <div th:text="${notification}"></div>
+            <div th:unless='${notification == ""}'>
+                <div class="alert alert-success" th:text="${notification}"></div>
+            </div>
             <form method="POST" th:action="@{/search}">
                 <input type="text" name="searchstring" id="searchstring" />
-                <input type="submit" value="Search!" />
+                <input class='btn btn-primary' type="submit" value="Search!" />
             </form>
 
             
@@ -24,7 +26,7 @@
                         <form method="POST" th:action="@{/follow}">
                             <a th:href="@{/users/{nick}(nick = ${user.nickname})}" th:text="${user.nickname}"></a>
                             <input type="hidden" th:value="${user.getId()}" name="idtofollow" id="idtofollow" />
-                            <input type="submit" value="follow" />
+                            <input class='btn btn-primary' type="submit" value="follow" />
                         </form>
                     </div>
                 </div>

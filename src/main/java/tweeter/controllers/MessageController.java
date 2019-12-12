@@ -10,6 +10,7 @@ import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,6 +22,7 @@ import tweeter.repositories.AccountRepository;
 import tweeter.repositories.CommentsRepository;
 import tweeter.repositories.LikesRepository;
 import tweeter.repositories.MessagesRepository;
+import tweeter.services.AccountService;
 
 /**
  *
@@ -41,6 +43,9 @@ public class MessageController {
     @Autowired
     private LikesRepository likesRepo;
     
+    @Autowired
+    private AccountService accountService;
+    
     @PostMapping("/shout")
     public String addNewShoutForUser(Authentication auth, @RequestParam String tweeter) {
         Account a = accountRepo.findByUsername(auth.getName());
@@ -53,16 +58,24 @@ public class MessageController {
     }
     
     @PostMapping("/comment/{postid}")
-    public String commentPostId(Authentication auth, @PathVariable Long postid, @RequestParam String comment) {
+    public String commentPostId(Model model, Authentication auth, @PathVariable Long postid, @RequestParam String comment) {
         Account acc = accountRepo.findByUsername(auth.getName());
         Messages message = messageRepo.getOne(postid);
         String user = message.getAccount().getNickname();
+        Account a = message.getAccount();
+        if (comment.length() < 3 || comment.length() > 100) {
+            model.addAttribute("owner", accountService.isOwner(auth, a));
+            model.addAttribute("account", a);
+            model.addAttribute("messages", a.getMessages());
+            model.addAttribute("notification", "Comment length between 3-100 chars");
+            return "userprofile";
+        }
         Comments c = new Comments();
         c.setComment(comment);
         c.setAccount(acc);
         c.setMessages(message);
         commentsRepo.save(c);
-        return "redirect:/users/" + user + "#post" + postid;
+        return "redirect:/users/" + user;
     }
     
     @PostMapping("/like/{postid}")

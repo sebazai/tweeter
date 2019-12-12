@@ -30,6 +30,7 @@ public class UserSearchController {
         String username = auth.getName();
         model.addAttribute("account", accountRepo.findByUsername(username));
         model.addAttribute("users", accountRepo.findAll());
+        model.addAttribute("notification", "");
         return "search";
     }
     

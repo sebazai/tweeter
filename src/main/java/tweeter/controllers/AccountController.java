@@ -48,6 +48,7 @@ public class AccountController {
         model.addAttribute("owner", accountService.isOwner(auth, a));
         model.addAttribute("account", a);
         model.addAttribute("messages", a.getMessages());
+        model.addAttribute("notification", "");
         return "userprofile";
     }
 

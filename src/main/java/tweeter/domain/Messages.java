@@ -40,11 +40,15 @@ public class Messages extends AbstractPersistable<Long> implements Comparable<Me
     
     public List<Comments> getComments() {
         Collections.sort(comments, Collections.reverseOrder());
+        if (comments.size() > 10) {
+            return comments.subList(0, 10);
+        }
         return comments;
     }
 
     @Override
     public int compareTo(Messages t) {
         return this.messageTime.compareTo(t.getMessageTime());
+        
     }
 }

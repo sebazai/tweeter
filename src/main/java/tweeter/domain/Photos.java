@@ -34,7 +34,7 @@ public class Photos extends AbstractPersistable<Long> {
     
     @Lob
     @Basic(fetch = FetchType.LAZY)  
-    @Type(type = "org.hibernate.type.BinaryType")
+    //@Type(type = "org.hibernate.type.BinaryType")
     private byte[] photo;
     
     @ManyToOne
@@ -48,6 +48,9 @@ public class Photos extends AbstractPersistable<Long> {
     
     public List<Comments> getComments() {
         Collections.sort(comments, Collections.reverseOrder());
+        if (comments.size() > 10) {
+            return comments.subList(0, 10);
+        }
         return comments;
     }
 }
