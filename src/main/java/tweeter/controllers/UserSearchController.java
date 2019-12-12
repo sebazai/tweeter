@@ -34,7 +34,9 @@ public class UserSearchController {
     }
     
     @PostMapping("/search")
-    public String searchForUserWithString(Model model, @RequestParam String searchstring) {
+    public String searchForUserWithString(Authentication auth, Model model, @RequestParam String searchstring) {
+        String username = auth.getName();
+        model.addAttribute("account", accountRepo.findByUsername(username));
         List<Account> foundUsers = accountRepo.findByNicknameContaining(searchstring);
         model.addAttribute("users", foundUsers);
         return "search";

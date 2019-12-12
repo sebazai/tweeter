@@ -7,36 +7,55 @@
     <body>
         <div th:replace="fragments/layout.html :: links(nickname=${account.nickname}, owner=${owner})"></div>
         <div class="container">
-            
-
-            <div th:if="${owner}">
+            <div class="row">
+            <div th:replace="fragments/layout.html :: profilepic(account = ${account}, owner=${owner})"></div>
+            <div class="col-md">
+            <div style="padding-bottom: 30px" th:if="${owner}">
                 <h1 th:text="${'Hello ' + account.nickname}">Hello world</h1>
                 <h2>
                     What's on your mind?
                 </h2>
                 <form method="POST" th:action="@{/shout}">
-                    <textarea name="tweeter" id="tweeter"></textarea><br />
-                    <input type="submit" value="Shout!" />
+                    <textarea name="tweeter" id="tweeter" rows="4" cols="50"></textarea><br />
+                    <input class="btn btn-primary" type="submit" value="Shout!" />
                 </form>
             </div>
-
+            <div th:unless="${owner}">
+                <h1 th:text="'Users ' + ${account.nickname} + ' wall'"></h1>
+            </div>
+            
             <div>
                 <div th:if="${messages.size() == 0}" th:text="'No posts by ' + ${account.nickname}"></div>
-                <div th:each="message: ${messages}">
-                    <div th:text="${message.message}"></div>
-                    <div th:text="${#temporals.format(message.messageTime, 'dd-MM-yyyy HH:mm')}"></div><br />
-                    <form method="POST" th:action="@{/comment/{postid}(postid = ${message.id})}">
-                        <textarea id="comment" name="comment"></textarea><br />
-                        <input type="submit" value="Comment" />
-                    </form>
+                <div th:id="'#post' + ${message.id}" style="margin-bottom: 20px" class="card" th:each="message: ${messages}">
+                    <h3 class="card-header" th:text="'Post by ' + ${account.nickname} + ' @ ' + ${#temporals.format(message.messageTime, 'dd-MM-yyyy HH:mm')}"></h3>
+                    <div class="card-body" th:text="${message.message}"></div>
+                    <div class="card-body" th:text="'Likes: ' + ${message.likes.size()}"></div><br />
+                    <div class="card">
+                        <h5 class="card-header">
+                            <a class="btn btn-primary" data-toggle="collapse" th:href="'#collapseMessage' + ${message.id}" role="button" aria-expanded="false" th:aria-controls="'collapseMessage' + ${message.id}">
+                                Click here to comment or like
+                            </a>
+                        </h5>
+                        <div class="collapse" th:id="'collapseMessage' + ${message.id}">
+                            <div class="card card-body">
+                                <form method="POST" th:action="@{/comment/{postid}(postid = ${message.id})}">
+                                    <textarea id="comment" name="comment" rows="5" cols="60"></textarea><br />
+                                    <input type="submit" class="btn btn-primary" value="Comment" />
+                                    <input value="Like" class="btn btn-primary" th:form="'likeform' + ${message.id}" type="submit" />
+                                </form>
+                                <form th:id="'likeform'+${message.id}" method="POST" th:action="@{/like/{postid}(postid = ${message.id})}"></form>
+                            </div>
+                        </div>
+                    </div>
                     <div th:unless='${message.comments.size() == 0}'>
-                        <div style="padding-bottom: 5px" th:each="comment: ${message.getComments()}">
-                            <span th:text="'Comment by ' + ${comment.account.nickname}"></span>
-                            <span th:text="${#temporals.format(comment.commentTime, 'dd-MM-yyyy HH:mm')}"></span>
-                            <div th:text="'Commented: ' + ${comment.comment}"></div>
+                        <div class="card" style="padding-bottom: 5px" th:each="comment: ${message.getComments()}">
+                            <h6 class="card-header" th:text="'Comment by ' + ${comment.account.nickname} + ' @ ' + ${#temporals.format(comment.commentTime, 'dd-MM-yyyy HH:mm')}"></h6>
+                            <div class="card-body" th:text="${comment.comment}"></div>
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
             </div>
         </div>
     </body>

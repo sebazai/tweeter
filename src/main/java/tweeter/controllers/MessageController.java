@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import tweeter.domain.Account;
 import tweeter.domain.Comments;
+import tweeter.domain.Likes;
 import tweeter.domain.Messages;
 import tweeter.repositories.AccountRepository;
 import tweeter.repositories.CommentsRepository;
+import tweeter.repositories.LikesRepository;
 import tweeter.repositories.MessagesRepository;
 
 /**
@@ -35,6 +37,9 @@ public class MessageController {
     
     @Autowired
     private AccountRepository accountRepo;
+    
+    @Autowired
+    private LikesRepository likesRepo;
     
     @PostMapping("/shout")
     public String addNewShoutForUser(Authentication auth, @RequestParam String tweeter) {
@@ -57,6 +62,21 @@ public class MessageController {
         c.setAccount(acc);
         c.setMessages(message);
         commentsRepo.save(c);
+        return "redirect:/users/" + user + "#post" + postid;
+    }
+    
+    @PostMapping("/like/{postid}")
+    public String likePostId(Authentication auth, @PathVariable Long postid) {
+        Account acc = accountRepo.findByUsername(auth.getName());
+        Messages message = messageRepo.getOne(postid);
+        String user = message.getAccount().getNickname();
+        if (likesRepo.findByAccountAndMessages(acc, message) != null) {
+            return "redirect:/users/" + user;
+        }
+        Likes l = new Likes();
+        l.setAccount(acc);
+        l.setMessages(message);
+        likesRepo.save(l);
         return "redirect:/users/" + user;
     }
 }

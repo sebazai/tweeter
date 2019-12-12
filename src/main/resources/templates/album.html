@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/layout :: head(title='Album')">
+        <meta charset="UTF-8" />
+        <title>Hello world</title>
+    </head>
+    <body>
+        <div class="col-md-12" th:replace="fragments/layout.html :: links(nickname=${account.nickname}, owner=true)"></div>
+        <div class="container">
+            
+            <h1>Search for users</h1>
+            
+        </div>
+    </body>
+</html>
+
+
