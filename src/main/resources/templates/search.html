@@ -26,7 +26,7 @@
                         <form method="POST" th:action="@{/follow}">
                             <a th:href="@{/users/{nick}(nick = ${user.nickname})}" th:text="${user.nickname}"></a>
                             <input type="hidden" th:value="${user.getId()}" name="idtofollow" id="idtofollow" />
-                            <input class='btn btn-primary' type="submit" value="follow" />
+                            <input class='btn btn-primary ml-5' type="submit" value="Follow" />
                         </form>
                     </div>
                 </div>

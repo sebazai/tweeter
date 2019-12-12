@@ -72,8 +72,9 @@ public class PhotosController {
             model.addAttribute("notification", "Only 10 photos allowed, you have reached your limit.");
             return "album";
         }
+
         if (!file.getContentType().contains("image") || file.getSize() == 0 || file.getSize() > 100000) {
-            model.addAttribute("notification", "File not image, or empty or is too big.");
+            model.addAttribute("notification", "File not image, or empty or is too big. (Max 100 KB)");
             model.addAttribute("account", a);
             model.addAttribute("owner", accountService.isOwner(auth, a));
             return "album";

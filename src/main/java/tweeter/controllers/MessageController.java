@@ -47,8 +47,15 @@ public class MessageController {
     private AccountService accountService;
     
     @PostMapping("/shout")
-    public String addNewShoutForUser(Authentication auth, @RequestParam String tweeter) {
+    public String addNewShoutForUser(Model model, Authentication auth, @RequestParam String tweeter) {
         Account a = accountRepo.findByUsername(auth.getName());
+        if (tweeter.length() < 3 || tweeter.length() > 150) {
+            model.addAttribute("owner", accountService.isOwner(auth, a));
+            model.addAttribute("account", a);
+            model.addAttribute("messages", a.getMessages());
+            model.addAttribute("notification", "Post should be between 3-100 chars.");
+            return "userprofile";
+        }
         Messages message = new Messages();
         message.setAccount(a);
         message.setMessage(tweeter);
