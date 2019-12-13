@@ -65,7 +65,7 @@ public class PhotosController {
     
     @PostMapping("/users/{user}/img")
     public String addImage(Authentication auth, @PathVariable String user, Model model, @RequestParam String description, @RequestParam("file") MultipartFile file) throws IOException {
-        Account a = accountRepo.findByUsername(user);
+        Account a = accountRepo.findByNickname(user);
         model.addAttribute("account", a);
         model.addAttribute("owner", accountService.isOwner(auth, a));  
         if (a.getPhotos().size() == 10) {
