@@ -71,7 +71,6 @@ public class AccountService {
      * @param a
      * @return 
      */
-    @Transactional
     public boolean isOwner(Authentication auth, Account a) {
         return auth.getName().equals(a.getUsername());
     }
