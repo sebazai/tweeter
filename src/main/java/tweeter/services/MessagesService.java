@@ -36,7 +36,15 @@ public class MessagesService {
     @Autowired
     private LikesRepository likesRepo;
 
-    
+    /**
+     * Return correct model, also used for comment error checking. Which is kind of stupid, but needed to get it somehow working asap.
+     * @param a Account, that is the authedAcc or owner of the message that gets the comment
+     * @param auth Authed acc
+     * @param notification If any, displayed on website
+     * @param model To return to thymeleaf
+     * @param owner Used so that we can get either your wall posts + your followers or the other guys post where you commented
+     * @return model
+     */
     public Model returnModel(Account a, Authentication auth, String notification, Model model, boolean owner) {
         model.addAttribute("owner", accountService.isOwner(auth, a));
         model.addAttribute("account", a);

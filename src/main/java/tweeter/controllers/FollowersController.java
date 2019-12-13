@@ -39,6 +39,13 @@ public class FollowersController {
     @Autowired
     private AccountService accountService;
     
+    /**
+     * Checks if you are following the dude, if not, adds you as his follower.
+     * @param auth Authenticated user
+     * @param idtofollow
+     * @param model
+     * @return 
+     */
     @PostMapping("/follow")
     public String followUser(Authentication auth, @RequestParam Long idtofollow, Model model) {
         Account tofollow = accountRepo.getOne(idtofollow);
@@ -60,6 +67,13 @@ public class FollowersController {
         return "search";
     }
     
+    /**
+     * Return accounts followers
+     * @param auth
+     * @param model
+     * @param nick the users followers to return
+     * @return 
+     */
     @GetMapping("/users/{nick}/followers")
     public String showUserFollowers(Authentication auth, Model model, @PathVariable String nick) {
         Account a = accountService.findAccount(nick);
@@ -70,6 +84,13 @@ public class FollowersController {
         return "follows";
     }
     
+    /**
+     * Returns who is following this account
+     * @param auth
+     * @param model
+     * @param nick the user who everyone is following
+     * @return 
+     */
     @GetMapping("/users/{nick}/following")
     public String showWhoUserIsFollowing(Authentication auth, Model model, @PathVariable String nick) {
         Account a = accountService.findAccount(nick);
@@ -80,6 +101,13 @@ public class FollowersController {
         return "follows";
     }
     
+    /**
+     * Block user
+     * @param model
+     * @param auth
+     * @param idtoblock
+     * @return 
+     */
     @Transactional
     @PostMapping("/follower/block/{idtoblock}")
     public String removeAndBlockFollower(Model model, Authentication auth, @PathVariable Long idtoblock) {
@@ -90,6 +118,13 @@ public class FollowersController {
         return "follows";
     }
     
+    /**
+     * Unfollow someone you are following.
+     * @param model
+     * @param auth
+     * @param id
+     * @return 
+     */
     @PostMapping("/follower/unfollow/{id}")
     public String unfollowUser(Model model, Authentication auth, @PathVariable Long id) {
         Account loggedinacc = accountRepo.findByUsername(auth.getName());

@@ -5,8 +5,6 @@
  */
 package tweeter.controllers;
 
-import java.time.LocalDateTime;
-import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -15,14 +13,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import tweeter.domain.Account;
-import tweeter.domain.Comments;
-import tweeter.domain.Likes;
 import tweeter.domain.Messages;
 import tweeter.repositories.AccountRepository;
-import tweeter.repositories.CommentsRepository;
-import tweeter.repositories.LikesRepository;
 import tweeter.repositories.MessagesRepository;
-import tweeter.services.AccountService;
 import tweeter.services.MessagesService;
 
 /**
@@ -41,6 +34,13 @@ public class MessageController {
     @Autowired
     private MessagesService messagesService;
     
+    /**
+     * Post mapping for shout/tweet
+     * @param model
+     * @param auth
+     * @param tweeter
+     * @return 
+     */
     @PostMapping("/shout")
     public String addNewShoutForUser(Model model, Authentication auth, @RequestParam String tweeter) {
         Account a = accountRepo.findByUsername(auth.getName());
@@ -52,6 +52,15 @@ public class MessageController {
         return "redirect:/users/" + a.getNickname();
     }
     
+    /**
+     * PostMap for commenting a post on your own wall or other peoples wall, checks if you are commenting your followers post on your own wall.
+     * @param model
+     * @param auth Authed user
+     * @param postid the id of post that gets the comment
+     * @param user Username of the wall where the comment was sent from
+     * @param comment the comment string
+     * @return 
+     */
     @PostMapping("/comment/{user}/{postid}")
     public String commentPostId(Model model, Authentication auth, @PathVariable Long postid, @PathVariable String user, @RequestParam String comment) {
         Account authedAcc = accountRepo.findByUsername(auth.getName());
@@ -77,6 +86,13 @@ public class MessageController {
         return "redirect:/users/" + userRedirect;
     }
     
+    /**
+     * Add a like to a post
+     * @param auth Authed user
+     * @param postid the message/post that gets the like
+     * @param user Username of the wall where the like was sent from
+     * @return 
+     */
     @PostMapping("/like/{user}/{postid}")
     public String likePostId(Authentication auth, @PathVariable Long postid, @PathVariable String user) {
         Account acc = accountRepo.findByUsername(auth.getName());

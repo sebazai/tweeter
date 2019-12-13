@@ -27,6 +27,15 @@ public class FollowersService {
     @Autowired
     private FollowersRepository followerRepo;
     
+    /**
+     * Returns the model for thymeleaf with correct objects
+     * @param model
+     * @param showFollowers Show either followers or the following people
+     * @param auth Authed used
+     * @param a Account whos followers/following people you watching
+     * @param notification If any, displayed on website
+     * @return 
+     */
     public Model returnFollowModel(Model model, Boolean showFollowers, Authentication auth, Account a, String notification) {
         List<Followers> followers;
         if (showFollowers) {
