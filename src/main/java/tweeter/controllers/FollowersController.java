@@ -52,8 +52,12 @@ public class FollowersController {
         Account follower = accountRepo.findByUsername(auth.getName());
         model.addAttribute("account", follower);
         model.addAttribute("users", accountRepo.findAll());
-        if (followerRepo.findByAccountIdAndThefollowerId(idtofollow, follower.getId()) != null) {
+        Followers findIfFollowing = followerRepo.findByAccountIdAndThefollowerId(idtofollow, follower.getId());
+        if (findIfFollowing != null) {
             String follownoti = "You are already following " + tofollow.getNickname() + "";
+            if (findIfFollowing.isBlocked()) {
+                follownoti = "That user has blocked you for some reason. :(";
+            }
             model.addAttribute("notification", follownoti);
             return "search";
         }

@@ -39,12 +39,24 @@ public class AccountService {
         return a;
     }
     
+    /**
+     * Checks if the authenticated user and the pages account where you were is your own or someone elses
+     * @param auth
+     * @param a
+     * @return 
+     */
     public boolean isOwner(Authentication auth, Account a) {
         return auth.getName().equals(a.getUsername());
     }
 
+    /**
+     * Get all followers for account, remove all followers that has blocked you, get all the account and get all the messages for these account, sort them by date and return.
+     * @param a Accounts messages + followers messages to get.
+     * @return Latest 25 posts by you and your followers ordered by post date.
+     */
     public List<Messages> getOwnersMessageStream(Account a) {
         List<Followers> following = followersRepo.findByThefollowerId(a.getId());
+        following.removeIf(fol -> fol.isBlocked() == true);
         List<Account> accounts = following.stream().map(f -> f.getAccount()).collect(Collectors.toList());
         List<Messages> messages = accounts.stream().flatMap(acc -> acc.getMessages().stream()).collect(Collectors.toList());
         messages.addAll(a.getMessages());

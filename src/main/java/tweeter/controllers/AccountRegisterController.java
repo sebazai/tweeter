@@ -43,6 +43,12 @@ public class AccountRegisterController {
         if (account.getPassword().length() > 20) {
             bindingResult.rejectValue("password", "error.account", "Password too long, maximum 20 characters");
         }
+        if (accountRepository.findByNickname(account.getNickname()) != null) {
+            bindingResult.rejectValue("nickname", "error.account", "Nickname already taken.");
+        }
+        if (accountRepository.findByUsername(account.getUsername()) != null) {
+            bindingResult.rejectValue("username", "error.account", "Username already taken.");
+        }
         if (bindingResult.hasErrors()) {
             return "register";
         }

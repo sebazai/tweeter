@@ -1,18 +1,24 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head>
+    <head th:replace="fragments/layout :: head(title = 'Well do something.')">
         <meta charset="UTF-8" />
         <title>Hello world</title>
     </head>
     <body>
-
-        <h1>Hello Stranger</h1>
-        <p>
-            To start using this social media platform, you need to log in or register.
-            <br />
-            <a href="/login">login</a><br />
-            <a href="/register">register</a>
-        </p>
+        <div class="container">
+            <div class="row">
+                <div class="col-md mt-5">
+                    
+                    <h1>Hello Stranger</h1>
+                    <p>
+                        To start using this social media platform, you need to log in or register.
+                    </p>
+                    <a class="btn btn-primary mb-3" href="/login">login</a><br />
+                    <a class="btn btn-primary" href="/register">register</a>
+                        
+                </div>
+            </div>
+        </div>
     </body>
 </html>
 
