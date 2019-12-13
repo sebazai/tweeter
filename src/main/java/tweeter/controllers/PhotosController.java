@@ -50,7 +50,7 @@ public class PhotosController {
     
     @GetMapping("/users/{user}/album")
     public String getUserAlbum(Authentication auth, Model model, @PathVariable String user) {
-        Account a = accountRepo.findByUsername(user);
+        Account a = accountRepo.findByNickname(user);
         model.addAttribute("account", a);
         model.addAttribute("owner", accountService.isOwner(auth, a));
         model.addAttribute("notification", "");
