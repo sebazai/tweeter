@@ -46,7 +46,7 @@
                                     <input type="submit" class="btn btn-primary" value="Comment" />
                                     <input value="Like" class="btn btn-primary" th:form="'likeform' + ${message.id}" type="submit" />
                                 </form>
-                                <form th:id="'likeform'+${message.id}" method="POST" th:action="@{/like/{user}/{postid}(postid = ${message.id}, user=${account.username})}"></form>
+                                <form th:id="'likeform'+${message.id}" method="POST" th:action="@{/like/{user}/{postid}(postid = ${message.id}, user=${account.nickname})}"></form>
                             </div>
                         </div>
                     </div>

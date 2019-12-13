@@ -96,7 +96,7 @@ public class MessageController {
      * Add a like to a post
      * @param auth Authed user
      * @param postid the message/post that gets the like
-     * @param user Username of the wall where the like was sent from
+     * @param user Nickname of the wall where the like was sent from
      * @return 
      */
     @PostMapping("/like/{user}/{postid}")
