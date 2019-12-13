@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import tweeter.domain.Account;
 import tweeter.domain.Followers;
+import tweeter.domain.Messages;
 import tweeter.repositories.AccountRepository;
 import tweeter.repositories.FollowersRepository;
 import tweeter.services.AccountService;
@@ -40,14 +41,20 @@ public class AccountController {
     @GetMapping("/users/{nick}")
     public String getUserProfile(Authentication auth, Model model, @PathVariable String nick) {
         Account a = accountService.findAccount(nick);
-        
+        Boolean owner = accountService.isOwner(auth, a);
         if (a == null) {
             return "redirect:/404notfound";
         }
+        if (owner) {
+            List<Messages> yoursAndFollowingMessages = accountService.getOwnersMessageStream(a);
+            model.addAttribute("messages", yoursAndFollowingMessages);
+        } else {
+            model.addAttribute("messages", a.getMessages());
+        }
+        
 
-        model.addAttribute("owner", accountService.isOwner(auth, a));
+        model.addAttribute("owner", owner);
         model.addAttribute("account", a);
-        model.addAttribute("messages", a.getMessages());
         model.addAttribute("notification", "");
         return "userprofile";
     }

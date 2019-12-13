@@ -29,7 +29,7 @@
             <div>
                 <div th:if="${messages.size() == 0}" th:text="'No posts by ' + ${account.nickname}"></div>
                 <div th:id="'#post' + ${message.id}" style="margin-bottom: 20px" class="card" th:each="message: ${messages}">
-                    <h3 class="card-header" th:text="'Post by ' + ${account.nickname} + ' @ ' + ${#temporals.format(message.messageTime, 'dd-MM-yyyy HH:mm')}"></h3>
+                    <h3 class="card-header" th:text="'Post by ' + ${message.account.nickname} + ' @ ' + ${#temporals.format(message.messageTime, 'dd-MM-yyyy HH:mm')}"></h3>
                     <div class="card-body" th:text="${message.message}"></div>
                     <div class="card">
                         <h5 class="card-header">
@@ -41,12 +41,12 @@
                         </h5>
                         <div class="collapse" th:id="'collapseMessage' + ${message.id}">
                             <div class="card card-body">
-                                <form method="POST" th:action="@{/comment/{postid}(postid = ${message.id})}">
+                                <form method="POST" th:action="@{/comment/{user}/{postid}(postid = ${message.id}, user=${account.username})}">
                                     <textarea id="comment" name="comment" rows="5" cols="60"></textarea><br />
                                     <input type="submit" class="btn btn-primary" value="Comment" />
                                     <input value="Like" class="btn btn-primary" th:form="'likeform' + ${message.id}" type="submit" />
                                 </form>
-                                <form th:id="'likeform'+${message.id}" method="POST" th:action="@{/like/{postid}(postid = ${message.id})}"></form>
+                                <form th:id="'likeform'+${message.id}" method="POST" th:action="@{/like/{user}/{postid}(postid = ${message.id}, user=${account.username})}"></form>
                             </div>
                         </div>
                     </div>
