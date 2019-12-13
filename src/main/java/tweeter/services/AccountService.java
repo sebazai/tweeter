@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tweeter.domain.Account;
 import tweeter.domain.Followers;
 import tweeter.domain.Messages;
@@ -31,6 +32,7 @@ public class AccountService {
     @Autowired
     private FollowersRepository followersRepo;
     
+    @Transactional
     public Account findAccount(String nick) {
     Account a = accountRepo.findByNickname(nick);
         if (a == null) {

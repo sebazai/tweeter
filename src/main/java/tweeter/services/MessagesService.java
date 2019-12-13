@@ -8,6 +8,7 @@ package tweeter.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import tweeter.domain.Account;
 import tweeter.domain.Comments;
@@ -56,7 +57,8 @@ public class MessagesService {
         model.addAttribute("notification", notification);
         return model;
     }
-
+    
+    @Transactional
     public void create(Account a, String tweeter) {
         Messages message = new Messages();
         message.setAccount(a);

@@ -1,4 +1,4 @@
-package projekti;
+package tweeter;
 
 import org.junit.Test;
 
