@@ -70,7 +70,19 @@ public class LoginAndRegisterTest {
     @Test
     public void cantLoginWithFakeAccount() throws Exception {
         FormLoginRequestBuilder login = formLogin().user("notfound").password("hehe");
-        mockMvc.perform(login).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login?error"));
+        mockMvc.perform(login).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login?error")).andReturn();
+    }
+    
+    @Test
+    public void cantCreateUsernameWithExistingUsername() throws Exception {
+        MvcResult res = mockMvc.perform(post("/register")
+            .param("username", "test")
+            .param("password", "tester123")
+            .param("passwordConfirm", "tester123")
+            .param("nickname", "tester"))
+        .andReturn();
+        assertTrue(res.getResponse().getContentAsString().contains("Username already taken"));
+        assertTrue(res.getResponse().getContentAsString().contains("Nickname already taken"));
     }
     
     @Test

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import tweeter.domain.Account;
 import tweeter.repositories.AccountRepository;
+import tweeter.services.AccountService;
 
 /**
  *
@@ -24,8 +25,9 @@ import tweeter.repositories.AccountRepository;
  */
 @Controller
 public class AccountRegisterController {
+    
     @Autowired
-    private AccountRepository accountRepository;
+    private AccountService accountService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -43,10 +45,10 @@ public class AccountRegisterController {
         if (account.getPassword().length() > 20) {
             bindingResult.rejectValue("password", "error.account", "Password too long, maximum 20 characters");
         }
-        if (accountRepository.findByNickname(account.getNickname()) != null) {
+        if (accountService.nicknameExists(account.getNickname())) {
             bindingResult.rejectValue("nickname", "error.account", "Nickname already taken.");
         }
-        if (accountRepository.findByUsername(account.getUsername()) != null) {
+        if (accountService.userExists(account.getUsername())) {
             bindingResult.rejectValue("username", "error.account", "Username already taken.");
         }
         if (bindingResult.hasErrors()) {
@@ -54,7 +56,7 @@ public class AccountRegisterController {
         }
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         account.setPasswordConfirm("ok");
-        accountRepository.save(account);
+        accountService.save(account);
         return "redirect:/login";
     }
 }

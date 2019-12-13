@@ -8,6 +8,7 @@ package tweeter.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import tweeter.domain.Account;
 import tweeter.domain.Messages;
 import tweeter.repositories.AccountRepository;
 import tweeter.repositories.MessagesRepository;
+import tweeter.services.AccountService;
 import tweeter.services.MessagesService;
 
 /**
@@ -34,6 +36,9 @@ public class MessageController {
     @Autowired
     private MessagesService messagesService;
     
+    @Autowired
+    private AccountService accountService;
+    
     /**
      * Post mapping for shout/tweet
      * @param model
@@ -41,9 +46,10 @@ public class MessageController {
      * @param tweeter
      * @return 
      */
+    
     @PostMapping("/shout")
     public String addNewShoutForUser(Model model, Authentication auth, @RequestParam String tweeter) {
-        Account a = accountRepo.findByUsername(auth.getName());
+        Account a = accountService.findAccountByUsername(auth.getName());
         if (tweeter.length() < 3 || tweeter.length() > 150) {
             model = messagesService.returnModel(a, auth, "Post should be between 3-100 chars.", model, true);
             return "userprofile";

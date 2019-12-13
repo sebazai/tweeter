@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import tweeter.domain.Account;
 import tweeter.domain.Followers;
@@ -49,5 +50,10 @@ public class FollowersService {
         model.addAttribute("followers", showFollowers);
         model.addAttribute("notification", notification);
         return model;
+    }
+    
+    @Transactional
+    public List<Followers> findByThefollowerId(Long id) {
+        return followerRepo.findByThefollowerId(id);
     }
 }
