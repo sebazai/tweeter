@@ -52,7 +52,7 @@ public class AccountController {
             model.addAttribute("messages", a.getMessages());
         }
         
-
+        model.addAttribute("isfollower", accountService.checkIfFollower(auth, nick));
         model.addAttribute("owner", owner);
         model.addAttribute("account", a);
         model.addAttribute("notification", "");

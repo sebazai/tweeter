@@ -52,6 +52,7 @@ public class MessageController {
         Account a = accountService.findAccountByUsername(auth.getName());
         if (tweeter.length() < 3 || tweeter.length() > 150) {
             model = messagesService.returnModel(a, auth, "Post should be between 3-100 chars.", model, true);
+            model.addAttribute("isfollower", true);
             return "userprofile";
         }
         messagesService.create(a, tweeter);
@@ -85,6 +86,7 @@ public class MessageController {
         
         if (comment.length() < 3 || comment.length() > 100) {
             model.addAttribute("notification", "Comment length between 3-100 chars");
+            model.addAttribute("isfollower", accountService.checkIfFollower(auth, user));
             return "userprofile";
         }
         messagesService.addComment(comment, authedAcc, message);

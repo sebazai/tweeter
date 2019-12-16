@@ -31,31 +31,47 @@
                 <div th:id="'#post' + ${message.id}" style="margin-bottom: 20px" class="card" th:each="message: ${messages}">
                     <h3 class="card-header" th:text="'Post by ' + ${message.account.nickname} + ' @ ' + ${#temporals.format(message.messageTime, 'dd-MM-yyyy HH:mm')}"></h3>
                     <div class="card-body" th:text="${message.message}"></div>
-                    <div class="card">
-                        <h5 class="card-header">
-                            <a style="float: left" class="btn btn-primary" data-toggle="collapse" th:href="'#collapseMessage' + ${message.id}" role="button" aria-expanded="false" th:aria-controls="'collapseMessage' + ${message.id}">
-                                Click here to comment or like
-                            </a>
-                            <span style="float:right" th:text="'Likes: ' + ${message.likes.size()}"></span>
-                            
-                        </h5>
-                        <div class="collapse" th:id="'collapseMessage' + ${message.id}">
-                            <div class="card card-body">
-                                <form method="POST" th:action="@{/comment/{user}/{postid}(postid = ${message.id}, user=${account.username})}">
-                                    <textarea id="comment" name="comment" rows="5" cols="60"></textarea><br />
-                                    <input type="submit" class="btn btn-primary" value="Comment" />
-                                    <input value="Like" class="btn btn-primary" th:form="'likeform' + ${message.id}" type="submit" />
-                                </form>
-                                <form th:id="'likeform'+${message.id}" method="POST" th:action="@{/like/{user}/{postid}(postid = ${message.id}, user=${account.nickname})}"></form>
+                    
+                    <!-- followers can comment only -->
+                    <div th:if="${isfollower}">
+                        <div class="card">
+                            <h5 class="card-header">
+                                <a style="float: left" class="btn btn-primary" data-toggle="collapse" th:href="'#collapseMessage' + ${message.id}" role="button" aria-expanded="false" th:aria-controls="'collapseMessage' + ${message.id}">
+                                    Click here to comment or like
+                                </a>
+                                <span style="float:right" th:text="'Likes: ' + ${message.likes.size()}"></span>
+
+                            </h5>
+                            <div class="collapse" th:id="'collapseMessage' + ${message.id}">
+                                <div class="card card-body">
+                                    <form method="POST" th:action="@{/comment/{user}/{postid}(postid = ${message.id}, user=${account.username})}">
+                                        <textarea id="comment" name="comment" rows="5" cols="60"></textarea><br />
+                                        <input type="submit" class="btn btn-primary" value="Comment" />
+                                        <input value="Like" class="btn btn-primary" th:form="'likeform' + ${message.id}" type="submit" />
+                                    </form>
+                                    <form th:id="'likeform'+${message.id}" method="POST" th:action="@{/like/{user}/{postid}(postid = ${message.id}, user=${account.nickname})}"></form>
+                                </div>
                             </div>
                         </div>
                     </div>
+                    <div th:unless="${isfollower}">
+                        <div class="card">
+                            <div class="card-header">
+                                <form th:id="'likeform'+${message.id}" method="POST" th:action="@{/like/{user}/{postid}(postid = ${message.id}, user=${account.nickname})}">
+                                    <input style="float:left" value="Like" class="btn btn-primary" th:form="'likeform' + ${message.id}" type="submit" />
+                                    <span style="float:right" th:text="'Likes: ' + ${message.likes.size()}"></span>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <div th:unless='${message.comments.size() == 0}'>
                         <div class="card" style="padding-bottom: 5px" th:each="comment: ${message.getComments()}">
                             <h6 class="card-header" th:text="'Comment by ' + ${comment.account.nickname} + ' @ ' + ${#temporals.format(comment.commentTime, 'dd-MM-yyyy HH:mm')}"></h6>
                             <div class="card-body" th:text="${comment.comment}"></div>
                         </div>
                     </div>
+
                 </div>
             </div>
         </div>

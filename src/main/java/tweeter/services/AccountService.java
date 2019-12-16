@@ -94,4 +94,23 @@ public class AccountService {
             return messages;
         }
     }
+
+    /**
+     * Only followers are allowed to comment pics and posts.
+     * @param name
+     * @param userswall
+     * @return 
+     */
+    public boolean checkIfFollower(Authentication auth, String userswall) {
+        Account authedAcc = this.findAccountByUsername(auth.getName());
+        Account showingWall = this.findAccount(userswall);
+        if (this.isOwner(auth, showingWall)) {
+            return true;
+        }
+        Followers f = followersRepo.findByAccountIdAndThefollowerId(showingWall.getId(), authedAcc.getId());
+        if (f != null && f.isBlocked() == false) {
+            return true;
+        }
+        return false;
+    }
 }

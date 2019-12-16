@@ -34,7 +34,7 @@ public class Photos extends AbstractPersistable<Long> {
     
     @Lob
     @Basic(fetch = FetchType.LAZY)  
-    @Type(type = "org.hibernate.type.BinaryType") //commented away for local, needed for heroku/pg
+    //@Type(type = "org.hibernate.type.BinaryType") //commented away for local, needed for heroku/pg
     private byte[] photo;
     
     @ManyToOne

@@ -41,21 +41,33 @@
                                 </div>
                             </form>
                             <form th:id="'deleteform'+${img.id}" method="POST" th:action="@{/delete/img/{imgid}(imgid = ${img.id})}"></form>
-                            <div class="card">
-                                <h5 class="card-header">
-                                    <a style="float:left" class="btn btn-primary" data-toggle="collapse" th:href="'#collapseMessage' + ${img.id}" role="button" aria-expanded="false" th:aria-controls="'collapseMessage' + ${img.id}">
-                                        Click here to comment or like
-                                    </a>
-                                    <span style="float:right" th:text="'Likes: ' + ${img.likes.size()}"></span>
-                                </h5>
-                                <div class="collapse" th:id="'collapseMessage' + ${img.id}">
-                                    <div class="card card-body">
-                                        <form method="POST" th:action="@{/comment/{user}/img/{imgid}(user=${account.nickname}, imgid = ${img.id})}">
-                                            <textarea id="comment" name="comment" rows="5" cols="60"></textarea><br />
-                                            <input type="submit" class="btn btn-primary" value="Comment" />
-                                            <input value="Like" class="btn btn-primary" th:form="'likeform' + ${img.id}" type="submit" />
+                            <div th:if="${isfollower}">
+                                <div class="card">
+                                    <h5 class="card-header">
+                                        <a style="float:left" class="btn btn-primary" data-toggle="collapse" th:href="'#collapseMessage' + ${img.id}" role="button" aria-expanded="false" th:aria-controls="'collapseMessage' + ${img.id}">
+                                            Click here to comment or like
+                                        </a>
+                                        <span style="float:right" th:text="'Likes: ' + ${img.likes.size()}"></span>
+                                    </h5>
+                                    <div class="collapse" th:id="'collapseMessage' + ${img.id}">
+                                        <div class="card card-body">
+                                            <form method="POST" th:action="@{/comment/{user}/img/{imgid}(user=${account.nickname}, imgid = ${img.id})}">
+                                                <textarea id="comment" name="comment" rows="5" cols="60"></textarea><br />
+                                                <input type="submit" class="btn btn-primary" value="Comment" />
+                                                <input value="Like" class="btn btn-primary" th:form="'likeform' + ${img.id}" type="submit" />
+                                            </form>
+                                            <form th:id="'likeform'+${img.id}" method="POST" th:action="@{/like/{user}/img/{imgid}(user=${account.nickname}, imgid = ${img.id})}"></form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div th:unless="${isfollower}">
+                                <div class="card">
+                                    <div class="card-header">
+                                        <form th:id="'likeform'+${img.id}" method="POST" th:action="@{/like/{user}/img/{imgid}(user=${account.nickname}, imgid = ${img.id})}">
+                                            <input style="float:left" value="Like" class="btn btn-primary" th:form="'likeform' + ${img.id}" type="submit" />
+                                            <span style="float:right" th:text="'Likes: ' + ${img.likes.size()}"></span>
                                         </form>
-                                        <form th:id="'likeform'+${img.id}" method="POST" th:action="@{/like/{user}/img/{imgid}(user=${account.nickname}, imgid = ${img.id})}"></form>
                                     </div>
                                 </div>
                             </div>

@@ -52,6 +52,7 @@ public class PhotosController {
     public String getUserAlbum(Authentication auth, Model model, @PathVariable String user) {
         Account a = accountRepo.findByNickname(user);
         model.addAttribute("account", a);
+        model.addAttribute("isfollower", accountService.checkIfFollower(auth, user));
         model.addAttribute("owner", accountService.isOwner(auth, a));
         model.addAttribute("notification", "");
         return "album";
@@ -70,11 +71,13 @@ public class PhotosController {
         model.addAttribute("owner", accountService.isOwner(auth, a));  
         if (a.getPhotos().size() == 10) {
             model.addAttribute("notification", "Only 10 photos allowed, you have reached your limit.");
+            model.addAttribute("isfollower", accountService.checkIfFollower(auth, user));
             return "album";
         }
 
         if (!file.getContentType().contains("image") || file.getSize() == 0 || file.getSize() > 100000) {
             model.addAttribute("notification", "File not image, or empty or is too big. (Max 100 KB)");
+            model.addAttribute("isfollower", accountService.checkIfFollower(auth, user));
             model.addAttribute("account", a);
             model.addAttribute("owner", accountService.isOwner(auth, a));
             return "album";
@@ -103,6 +106,7 @@ public class PhotosController {
             model.addAttribute("account", photo.getAccount());
             model.addAttribute("owner", accountService.isOwner(auth, acc));
             model.addAttribute("notification", "Comments should be between 3-100 chars");
+            model.addAttribute("isfollower", accountService.checkIfFollower(auth, user));
             return "album";
         }
         Comments c = new Comments();
