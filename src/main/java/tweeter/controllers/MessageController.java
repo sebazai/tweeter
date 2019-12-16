@@ -86,7 +86,7 @@ public class MessageController {
         
         if (comment.length() < 3 || comment.length() > 100) {
             model.addAttribute("notification", "Comment length between 3-100 chars");
-            model.addAttribute("isfollower", accountService.checkIfFollower(auth, user));
+            model.addAttribute("isfollower", accountService.checkIfFollower(auth, ownerOfMessage.getNickname()));
             return "userprofile";
         }
         messagesService.addComment(comment, authedAcc, message);
