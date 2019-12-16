@@ -7,7 +7,6 @@ package tweeter.repositories;
 
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
-import tweeter.domain.Account;
 import tweeter.domain.Followers;
 
 /**

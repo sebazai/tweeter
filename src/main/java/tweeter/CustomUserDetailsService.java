@@ -1,9 +1,6 @@
 package tweeter;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
 import tweeter.domain.Account;
 import tweeter.repositories.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (account == null) {
             throw new UsernameNotFoundException("No such user: " + username);
         }
-//        List<SimpleGrantedAuthority> author = account.getAuthorities().stream().map(role -> new SimpleGrantedAuthority(role)).collect(Collectors.toList());
+        
         return new org.springframework.security.core.userdetails.User(
         account.getUsername(),
         account.getPassword(),

@@ -13,10 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import tweeter.domain.Account;
-import tweeter.domain.Followers;
 import tweeter.domain.Messages;
 import tweeter.repositories.AccountRepository;
-import tweeter.repositories.FollowersRepository;
 import tweeter.services.AccountService;
 
 /**
