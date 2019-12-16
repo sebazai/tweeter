@@ -104,7 +104,7 @@ public class PhotosController {
         Photos photo = photosRepo.getOne(imgid);
         if (comment.length() < 3 || comment.length() > 100) {
             model.addAttribute("account", photo.getAccount());
-            model.addAttribute("owner", accountService.isOwner(auth, acc));
+            model.addAttribute("owner", accountService.isOwner(auth, photo.getAccount()));
             model.addAttribute("notification", "Comments should be between 3-100 chars");
             model.addAttribute("isfollower", accountService.checkIfFollower(auth, user));
             return "album";
