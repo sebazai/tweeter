@@ -2,6 +2,7 @@
 *.jar
 *.war
 
+.idea
 target/
 
 .tmcproject.yml
