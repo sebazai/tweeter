@@ -1,6 +1,7 @@
 # Tweeter
 
 [![CircleCI](https://circleci.com/gh/sebazai/tweeter.svg?style=svg)](https://circleci.com/gh/sebazai/tweeter)
+[![codecov](https://codecov.io/gh/sebazai/tweeter/branch/master/graph/badge.svg)](https://codecov.io/gh/sebazai/tweeter)
 
 School project for Java Spring Web-palvelinohjelmointi.
 [Details in finnish](https://web-palvelinohjelmointi-s19.mooc.fi/projekti)
