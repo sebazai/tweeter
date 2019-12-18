@@ -1,5 +1,7 @@
 # Tweeter
 
+[![CircleCI](https://circleci.com/gh/sebazai/tweeter.svg?style=svg)](https://circleci.com/gh/sebazai/tweeter)
+
 School project for Java Spring Web-palvelinohjelmointi.
 [Details in finnish](https://web-palvelinohjelmointi-s19.mooc.fi/projekti)
 
