@@ -65,7 +65,8 @@ public class MessagesService {
         message.setMessage(tweeter);
         messageRepo.save(message);
     }
-
+    
+    @Transactional
     public void addComment(String comment, Account authedAcc, Messages message) {
         Comments c = new Comments();
         c.setComment(comment);
@@ -73,7 +74,8 @@ public class MessagesService {
         c.setMessages(message);
         commentsRepo.save(c);
     }
-
+    
+    @Transactional
     public void addLike(Account acc, Messages message) {
         if (likesRepo.findByAccountAndMessages(acc, message) != null) {
             return;
@@ -82,6 +84,11 @@ public class MessagesService {
         l.setAccount(acc);
         l.setMessages(message);
         likesRepo.save(l);
+    }
+    
+    @Transactional
+    public Messages getPostById(Long id) {
+        return messageRepo.getOne(id);
     }
     
 }

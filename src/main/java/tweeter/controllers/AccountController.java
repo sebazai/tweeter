@@ -39,10 +39,11 @@ public class AccountController {
     @GetMapping("/users/{nick}")
     public String getUserProfile(Authentication auth, Model model, @PathVariable String nick) {
         Account a = accountService.findAccount(nick);
-        Boolean owner = accountService.isOwner(auth, a);
+        
         if (a == null) {
             return "redirect:/404notfound";
         }
+        Boolean owner = accountService.isOwner(auth, a);
         if (owner) {
             List<Messages> yoursAndFollowingMessages = accountService.getOwnersMessageStream(a);
             model.addAttribute("messages", yoursAndFollowingMessages);

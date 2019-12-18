@@ -49,7 +49,7 @@ public class MessageController {
     @PostMapping("/shout")
     public String addNewShoutForUser(Model model, Authentication auth, @RequestParam String tweeter) {
         Account a = accountService.findAccountByUsername(auth.getName());
-        if (tweeter.length() < 3 || tweeter.length() > 150) {
+        if (tweeter.length() < 3 || tweeter.length() > 100) {
             model = messagesService.returnModel(a, auth, "Post should be between 3-100 chars.", model, true);
             model.addAttribute("isfollower", true);
             return "userprofile";
@@ -102,8 +102,8 @@ public class MessageController {
      */
     @PostMapping("/like/{user}/{postid}")
     public String likePostId(Authentication auth, @PathVariable Long postid, @PathVariable String user) {
-        Account acc = accountRepo.findByUsername(auth.getName());
-        Messages message = messageRepo.getOne(postid);
+        Account acc = accountService.findAccountByUsername(auth.getName());
+        Messages message = messagesService.getPostById(postid);
         messagesService.addLike(acc, message);
         return "redirect:/users/" + user;
     }

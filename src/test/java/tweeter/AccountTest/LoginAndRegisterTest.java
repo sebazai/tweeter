@@ -3,26 +3,28 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package tweeter;
+package tweeter.AccountTest;
 
-import javax.transaction.Transactional;
 import static org.junit.Assert.assertTrue;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.FormLoginRequestBuilder;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.security.test.web.servlet.response.SecurityMockMvcResultMatchers.authenticated;
+import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import tweeter.repositories.AccountRepository;
 import tweeter.repositories.MessagesRepository;
@@ -31,13 +33,17 @@ import tweeter.repositories.MessagesRepository;
  * @author sebserge
  */
 @ActiveProfiles("test")
-@RunWith(SpringRunner.class)
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration
+@WebAppConfiguration
 @SpringBootTest
-@AutoConfigureMockMvc
 public class LoginAndRegisterTest {
     
     @Autowired
+    private WebApplicationContext context;
+    
     private MockMvc mockMvc;
+
     
     @Autowired
     private AccountRepository accountRep;
@@ -49,6 +55,10 @@ public class LoginAndRegisterTest {
     public void setup() throws Exception {
         messagesRep.deleteAllInBatch();
         accountRep.deleteAllInBatch();
+        mockMvc = MockMvcBuilders
+          .webAppContextSetup(context)
+          .apply(SecurityMockMvcConfigurers.springSecurity())
+          .build();
         mockMvc.perform(post("/register")
             .param("username", "test")
             .param("password", "tester123")
@@ -68,9 +78,35 @@ public class LoginAndRegisterTest {
     }
     
     @Test
+    public void cantCreateUserWithTooLongPassword() throws Exception {
+        accountRep.deleteAll();
+        MvcResult res = mockMvc.perform(post("/register").param("username", "testing")
+            .param("password", "tester123tester123tester123tester123")
+            .param("passwordConfirm", "tester123tester123tester123tester123")
+            .param("nickname", "testering")).andReturn();
+        assertTrue(res.getResponse().getContentAsString().contains("Password too long"));
+    }
+    
+    @Test
+    public void passwordsDoNotMatch() throws Exception {
+        accountRep.deleteAll();
+        MvcResult res = mockMvc.perform(post("/register").param("username", "testing")
+            .param("password", "tester123tes")
+            .param("passwordConfirm", "tester123tester")
+            .param("nickname", "testering")).andReturn();
+        assertTrue(res.getResponse().getContentAsString().contains("Passwords do not match"));
+    }
+    
+    @Test
     public void cantLoginWithFakeAccount() throws Exception {
         FormLoginRequestBuilder login = formLogin().user("notfound").password("hehe");
         mockMvc.perform(login).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/login?error")).andReturn();
+    }
+    
+    @Test
+    public void showsRegisterForm() throws Exception {
+        MvcResult res = mockMvc.perform(get("/register")).andReturn();
+        assertTrue(res.getResponse().getContentAsString().contains("Enter information"));
     }
     
     @Test
@@ -98,10 +134,21 @@ public class LoginAndRegisterTest {
     }
     
     @Test
-    @Transactional
     @WithMockUser(username = "test", password = "tester123", roles = "USER")
     public void canSeeWallWhenLoggedIn() throws Exception {
         MvcResult res = mockMvc.perform(get("/users/tester")).andReturn();
         assertTrue(res.getResponse().getContentAsString().contains("No posts by tester"));
+    }
+    
+    @Test
+    @WithMockUser("test")
+    public void usersRedirectsToOwnProfile() throws Exception {
+        mockMvc.perform(get("/users")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/users/tester"));
+    }
+    
+    @Test
+    @WithMockUser("test")
+    public void goToAProfileThatDoesntExistsRedirectsTo404NotFound() throws Exception {
+        mockMvc.perform(get("/users/nakki")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/404notfound"));
     }
 }
