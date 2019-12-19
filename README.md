@@ -15,12 +15,13 @@ Done:
 - Can add/delete photos (max 100Kb)
 - Change profilepic
 - Search user
+- Mock system/integration tests
 
 To do:
 - Limit and order comments and posts straight from database with Pageable
-- Fix N+1 problems
+- Fix database N+1 problem in Spring
 - Validations for posts, comments
-- Alot of tests
+- Unit and integration tests
 - If blocked, can't see users wall
 - Alot of refactoring
 - Search not case sensitive
