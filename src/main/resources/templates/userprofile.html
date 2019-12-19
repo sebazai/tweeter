@@ -37,17 +37,22 @@
                         <div class="card">
                             <h5 class="card-header">
                                 <a style="float: left" class="btn btn-primary" data-toggle="collapse" th:href="'#collapseMessage' + ${message.id}" role="button" aria-expanded="false" th:aria-controls="'collapseMessage' + ${message.id}">
-                                    Click here to comment or like
+                                    Click here to comment
                                 </a>
-                                <span style="float:right" th:text="'Likes: ' + ${message.likes.size()}"></span>
-
+                                <span style="float:right"> 
+                                    
+                                    <input value="Like" class="btn btn-primary mr-3" th:form="'likeform' + ${message.id}" type="submit" />
+                                    <span style="float:right" th:text="'Likes: ' + ${message.likes.size()}"></span>
+                                    
+                                </span>
+                                
                             </h5>
+                            
                             <div class="collapse" th:id="'collapseMessage' + ${message.id}">
                                 <div class="card card-body">
                                     <form method="POST" th:action="@{/comment/{user}/{postid}(postid = ${message.id}, user=${account.username})}">
                                         <textarea id="comment" name="comment" rows="5" cols="60"></textarea><br />
-                                        <input type="submit" class="btn btn-primary" value="Comment" />
-                                        <input value="Like" class="btn btn-primary" th:form="'likeform' + ${message.id}" type="submit" />
+                                        <input type="submit" class="btn btn-primary" value="Comment" />    
                                     </form>
                                     <form th:id="'likeform'+${message.id}" method="POST" th:action="@{/like/{user}/{postid}(postid = ${message.id}, user=${account.nickname})}"></form>
                                 </div>

@@ -20,10 +20,9 @@ Done:
 To do:
 - Limit and order comments and posts straight from database with Pageable
 - Fix database N+1 problem in Spring
-- Validations for posts, comments
-- Unit and integration tests
+- Validations for posts, comments properly
+- Unit / integration tests
 - If blocked, can't see users wall
-- Alot of refactoring
-- Search not case sensitive
-- If following, move the like button away from the comments dropdown
+- Refactor code
+- Search to not be case sensitive
 - ... Much more :)
