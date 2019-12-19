@@ -73,6 +73,8 @@ public class MessageController {
         Messages message = messageRepo.getOne(postid);
         Account ownerOfMessage = message.getAccount();
         
+        
+        //Implement validations that followers can comment and make comment length validation error come from DB
         String userRedirect;
         
         if (authedAcc.getUsername().equals(user)) {

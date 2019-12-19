@@ -5,6 +5,9 @@
  */
 package tweeter.FollowTest;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import org.junit.After;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -13,6 +16,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers;
@@ -28,6 +36,7 @@ import org.springframework.web.context.WebApplicationContext;
 import tweeter.domain.Account;
 import tweeter.domain.Messages;
 import tweeter.repositories.AccountRepository;
+import tweeter.repositories.CommentsRepository;
 import tweeter.repositories.FollowersRepository;
 import tweeter.repositories.MessagesRepository;
 /**
@@ -57,9 +66,13 @@ public class FollowFunctionalityTest {
     @Autowired
     private FollowersRepository followerRep;
     
+    @Autowired
+    private CommentsRepository commentsRep;
+    
     @Before
     public void setup() throws Exception {
         followerRep.deleteAllInBatch();
+        commentsRep.deleteAllInBatch();
         messagesRep.deleteAllInBatch();
         accountRep.deleteAllInBatch();
         mockMvc = MockMvcBuilders
@@ -72,6 +85,7 @@ public class FollowFunctionalityTest {
             .param("passwordConfirm", "tester123")
             .param("nickname", "tester"))
         .andReturn();
+        registerAnotherUser();
     }
     
     @After
@@ -82,7 +96,6 @@ public class FollowFunctionalityTest {
     @Test
     @WithMockUser("test")
     public void canFollowUser() throws Exception {
-        registerAnotherUser();
         Account follow = accountRep.findByNickname("another");
         mockMvc.perform(post("/follow").param("idtofollow", follow.getId().toString()));
         MvcResult res = mockMvc.perform(get("/users/tester/following")).andReturn();
@@ -93,7 +106,6 @@ public class FollowFunctionalityTest {
     @Test
     @WithMockUser("test")
     public void cantFollowTwiceSameUser() throws Exception {
-        registerAnotherUser();
         Account follow = accountRep.findByNickname("another");
         mockMvc.perform(post("/follow").param("idtofollow", follow.getId().toString()));
         MvcResult res = mockMvc.perform(post("/follow").param("idtofollow", follow.getId().toString())).andReturn();
@@ -103,7 +115,6 @@ public class FollowFunctionalityTest {
     @Test
     @WithMockUser("test")
     public void followersAreShown() throws Exception {
-        registerAnotherUser();
         Account follow = accountRep.findByNickname("another");
         mockMvc.perform(post("/follow").param("idtofollow", follow.getId().toString()));
         
@@ -114,12 +125,92 @@ public class FollowFunctionalityTest {
     @Test
     @WithMockUser("test")
     public void followingAreShown() throws Exception {
-        registerAnotherUser();
         Account following = accountRep.findByNickname("another");
         mockMvc.perform(post("/follow").param("idtofollow", following.getId().toString()));
         
         MvcResult res = mockMvc.perform(get("/users/tester/following")).andReturn();
         assertTrue(res.getResponse().getContentAsString().contains("Started following another on"));
+    }
+    
+    @Test
+    @WithMockUser("test")
+    public void redirectIfUserNicknameNotFoundFollowers() throws Exception {
+        mockMvc.perform(get("/users/notfound/followers")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/404notfound"));
+    }
+    
+    @Test
+    @WithMockUser("test")
+    public void redirectIfUserNicknameNotFoundFollowing() throws Exception {
+        mockMvc.perform(get("/users/notfound/following")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/404notfound"));
+    }
+    
+    @WithMockUser("test")
+    @Test
+    public void unfollowRemovesFollower() throws Exception {
+        Account following = accountRep.findByNickname("another");
+        mockMvc.perform(post("/follow").param("idtofollow", following.getId().toString()));
+        
+        mockMvc.perform(post("/follower/unfollow/" + following.getId().toString())).andReturn();
+        
+        MvcResult res = mockMvc.perform(get("/users/tester/following")).andReturn();
+        assertFalse(res.getResponse().getContentAsString().contains("Started following another on"));
+    }
+    
+    @WithMockUser("test")
+    @Test
+    public void canBlockAndDoesntShowOnFollowersListing() throws Exception {
+        Account following = accountRep.findByNickname("another");
+        mockMvc.perform(post("/follow").param("idtofollow", following.getId().toString()));
+        
+        mockMvc.perform(post("/login").param("username", "another").param("password", "tester123")).andReturn();
+        MvcResult res = mockMvc.perform(get("/users/another/followers")).andReturn();
+        assertTrue(res.getResponse().getContentAsString().contains("User tester started following you on"));
+        
+        Account tester = accountRep.findByNickname("tester");
+        
+        mockMvc.perform(post("/follower/block/" + tester.getId()));
+        
+        res = mockMvc.perform(get("/users/another/followers")).andReturn();
+        assertFalse(res.getResponse().getContentAsString().contains("User tester started following you on"));
+    }
+    
+    @WithMockUser("test")
+    @Test
+    public void cantStartFollowingAgainWhenBlocked() throws Exception {
+        Account following = accountRep.findByNickname("another");
+        mockMvc.perform(post("/follow").param("idtofollow", following.getId().toString()));
+        
+        mockMvc.perform(post("/login").param("username", "another").param("password", "tester123")).andReturn();
+        MvcResult res = mockMvc.perform(get("/users/another/followers")).andReturn();
+        assertTrue(res.getResponse().getContentAsString().contains("User tester started following you on"));
+        
+        Account tester = accountRep.findByNickname("tester");
+        
+        mockMvc.perform(post("/follower/block/" + tester.getId()));
+        mockMvc.perform(post("/login").param("username", "test").param("password", "tester123")).andReturn();
+        res = mockMvc.perform(post("/follow").param("idtofollow", following.getId().toString())).andReturn();
+        assertTrue(res.getResponse().getContentAsString().contains("That user has blocked you for"));
+    }
+    
+    @WithMockUser("test")
+    @Test
+    public void canCommentPostOnlyIfFollowerFromYourFeed() throws Exception {
+        Account following = accountRep.findByNickname("another");
+        mockMvc.perform(post("/follow").param("idtofollow", following.getId().toString()));
+        this.addAPostForAnotherUser();
+        
+        MvcResult res = mockMvc.perform(get("/users/tester/")).andReturn();
+        String contains = res.getResponse().getContentAsString();
+        
+        assertTrue(contains.contains("Well hello there"));
+        assertTrue(contains.contains("Click here to comment"));
+        List<Messages> messages = messagesRep.findAll();
+        mockMvc.perform(post("/comment/test/" + messages.get(0).getId()).param("comment", "nakkimakkara")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/users/tester")).andReturn();
+        
+        res = mockMvc.perform(get("/users/tester/")).andReturn();
+        String content = res.getResponse().getContentAsString();
+        assertTrue(content.contains("nakkimakkara"));
+        assertTrue(content.contains("Post by another"));
     }
     
     public void registerAnotherUser() throws Exception {
@@ -138,4 +229,6 @@ public class FollowFunctionalityTest {
         message.setMessage("Well hello there");
         messagesRep.save(message);
     }
+    
+
 }
