@@ -68,6 +68,37 @@ public class LoginAndRegisterTest {
     }
     
     @Test
+    public void redirectsToRegisterAndLoginIfNotLoggedIn() throws Exception {
+        mockMvc.perform(get("/")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/first")).andReturn();
+    }
+    
+    @Test
+    public void returnLoginAndRegisterScreen() throws Exception {
+        MvcResult res = mockMvc.perform(get("/first")).andReturn();
+        String content = res.getResponse().getContentAsString();
+        assertTrue(content.contains("Hello Stranger"));
+    }
+    
+    @Test
+    @WithMockUser("test")
+    public void f404notfound() throws Exception {
+        MvcResult res = mockMvc.perform(get("/somehwere")).andReturn();
+        assertTrue(res.getResponse().getContentAsString().contains("404 Not Found"));
+    }
+    
+    @Test
+    @WithMockUser("test")
+    public void successfullloginRedirects() throws Exception {
+        mockMvc.perform(get("/successfullogin")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/users/tester")).andReturn();
+    }
+    
+    @Test
+    @WithMockUser("test")
+    public void authedUserRedirectedToProfile() throws Exception {
+        mockMvc.perform(get("/first")).andExpect(status().is3xxRedirection()).andExpect(redirectedUrl("/successfullogin")).andReturn();
+    }
+    
+    @Test
     public void canCreateAccount() throws Exception {
         accountRep.deleteAll();
         mockMvc.perform(post("/register").param("username", "testing")
